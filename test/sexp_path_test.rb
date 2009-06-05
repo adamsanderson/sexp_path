@@ -33,6 +33,14 @@ class Test_SomethingToTest < Test::Unit::TestCase
       "Nested sexp should exactly match once"
   end
   
+  def test_equality_of_atom
+    assert ATOM == :a,  "Should match a symbol"
+    assert ATOM == 1,   "Should match a number"
+    assert ATOM == nil, "Should match nil"
+    assert ATOM != [],  "Should not match an array"
+    assert ATOM != s(), "Should not match an sexp"
+  end
+  
   def test_searching_with_atom    
     assert_search_count s(:add, :a, :b), s(:add, ATOM, :b) , 1, 
       "ATOM should match :a"
@@ -42,6 +50,14 @@ class Test_SomethingToTest < Test::Unit::TestCase
       
     assert_search_count s(:a, s()), s(:a, ATOM), 0, 
       "ATOM should not match s()"
+  end
+  
+  def test_equality_of_wildacard
+    assert WILD == :a,  "Should match a symbol"
+    assert WILD == 1,   "Should match a number"
+    assert WILD == nil, "Should match nil"
+    assert WILD == [],  "Should match an array"
+    assert WILD == s(), "Should match an sexp"
   end
   
   def test_searching_with_wildcard

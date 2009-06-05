@@ -19,11 +19,11 @@ end
 
 class SexpAtom < SexpMatchSpecial
   def ==(o)
-    o and !o.is_a? Array
+    !o.is_a? Array
   end
 
   def ===(o)
-    o and !o.is_a? Array
+    !o.is_a? Array
   end
 
   def inspect

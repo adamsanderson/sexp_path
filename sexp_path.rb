@@ -17,6 +17,29 @@ module Traverse
   end
 end
 
+class SexpQueryNode < SexpMatchSpecial
+  
+end
+
+class SexpBlockMatch < SexpMatchSpecial
+  attr_reader :exp
+  def initialize &block
+    @exp = block
+  end
+  
+  def ==(o)
+    !!@exp[o]
+  end
+  
+  def ===(o)
+    !!@exp[o]
+  end
+  
+  def inspect
+    "<custom>"
+  end
+end
+
 class SexpAtom < SexpMatchSpecial
   def ==(o)
     !o.is_a? Array

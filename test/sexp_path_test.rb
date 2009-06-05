@@ -97,6 +97,16 @@ class Test_SomethingToTest < Test::Unit::TestCase
       "Include should not descend"
   end
   
+  def test_block_matching
+    sb = SexpBlockMatch
+    
+    assert sb.new{|o| o == s(:a)}     == s(:a), "Should match simple equality"
+    assert sb.new{|o| o.length == 1}  == s(:a), "Should match length check"
+    
+    assert_search_count s(:a, s(:b), s(:c), s(:d,:t) ), sb.new{|o| o.length == 2 }, 1, 
+      "Should match s(:d, :t)"
+  end
+  
   private
   def assert_search_count(sexp, example, count, message)
     i = 0

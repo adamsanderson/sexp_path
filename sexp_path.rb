@@ -17,11 +17,13 @@ module Traverse
   end
 end
 
-class SexpQueryNode < SexpMatchSpecial
-  
+class SexpMatcher < SexpMatchSpecial
+  def ===(o)
+    self == o
+  end
 end
 
-class SexpBlockMatch < SexpMatchSpecial
+class SexpBlockMatch < SexpMatcher
   attr_reader :exp
   def initialize &block
     @exp = block
@@ -31,21 +33,13 @@ class SexpBlockMatch < SexpMatchSpecial
     !!@exp[o]
   end
   
-  def ===(o)
-    !!@exp[o]
-  end
-  
   def inspect
     "<custom>"
   end
 end
 
-class SexpAtom < SexpMatchSpecial
+class SexpAtom < SexpMatcher
   def ==(o)
-    !o.is_a? Array
-  end
-
-  def ===(o)
     !o.is_a? Array
   end
 
@@ -54,12 +48,8 @@ class SexpAtom < SexpMatchSpecial
   end
 end
 
-class SexpWildCard < SexpMatchSpecial
-  def === (o)
-    return true
-  end
-  
-  def == (o)
+class SexpWildCard < SexpMatcher
+  def ==(o)
     return true
   end
   
@@ -68,22 +58,14 @@ class SexpWildCard < SexpMatchSpecial
   end
 end
 
-class SexpInclude < SexpMatchSpecial
+class SexpInclude < SexpMatcher
   attr_reader :value
   
   def initialize(value)
     @value = value
   end
   
-  def === (o)
-    if o.respond_to? :include?
-      return o.include?(value)
-    else
-      o == value
-    end
-  end
-  
-  def == (o)
+  def ==(o)
     if o.respond_to? :include?
       return o.include?(value)
     else

@@ -46,6 +46,8 @@ class SexpWildCard < SexpMatchSpecial
 end
 
 class SexpInclude < SexpMatchSpecial
+  attr_reader :value
+  
   def initialize(value)
     @value = value
   end
@@ -64,6 +66,10 @@ class SexpInclude < SexpMatchSpecial
     else
       o == value
     end
+  end
+  
+  def inspect
+    "INCLUDE(#{value.inspect})"
   end
 end
 

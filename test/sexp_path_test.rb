@@ -7,7 +7,7 @@ class Test_SomethingToTest < Test::Unit::TestCase
   
   def setup
     @ast_sexp = # Imagine it looks like a ruby AST
-      s(:class, :Cake, 
+      s(:class, :cake, 
         s(
           s(:defn, :foo, 
             s(:add, :a, :b)
@@ -28,6 +28,12 @@ class Test_SomethingToTest < Test::Unit::TestCase
       
     assert_search_count @ast_sexp, s(:add, :a, :b), 1, 
       "Should exactly match once"
+      
+    assert_search_count s(:a, s(:b, s(:c))), s(:b, s(:c)), 1, 
+      "Should match an exact subset"
+    
+    assert_search_count s(:a, s(:b, s(:c))), s(:a, s(:c)), 0, 
+      "Should not match the child s(:c)"
       
     assert_search_count @ast_sexp, s(:defn, :bar, s(:sub, :a, :b)), 1, 
       "Nested sexp should exactly match once"
@@ -75,17 +81,20 @@ class Test_SomethingToTest < Test::Unit::TestCase
   end
   
   def test_searching_with_include
-    assert_search_count s(:add, :a, :b), s(:add, WILD, :b) , 1, 
-      "WILD should match :a"
+    assert_search_count s(:add, :a, :b), INCLUDE(:a) , 1, 
+      "Sexp should include atom :a"
       
-    assert_search_count @ast_sexp, s(:defn, WILD, s(WILD, :a, :b) ), 2, 
-      "WILDs should match :foo/:bar and :add/:sub"
+    assert_search_count @ast_sexp, INCLUDE(:bar), 1, 
+      "Sexp should include atom :bar"
       
-    assert_search_count s(:a, s()), s(:a, WILD), 1, 
-      "WILD should match s()"
-      
-    assert_search_count @ast_sexp, WILD, 6, 
-      "WILD should match every sub expression"
+    assert_search_count @ast_sexp, s(:defn, ATOM, INCLUDE(:a)), 2, 
+      "Sexp should match :defn with an sexp including :a"
+    
+    assert_search_count @ast_sexp, s(:defn, ATOM, INCLUDE(:a)), 2, 
+      "Sexp should match :defn with an sexp including :a"
+    
+    assert_search_count s(:a, s(:b, s(:c))), s(:a, INCLUDE(:c)), 0, 
+      "Include should not descend"
   end
   
   private

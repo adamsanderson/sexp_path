@@ -147,7 +147,7 @@ class SexpInclude < SexpMatcher
   end
   
   def inspect
-    "INCLUDE(#{value.inspect})"
+    "include(#{value.inspect})"
   end
 end
 

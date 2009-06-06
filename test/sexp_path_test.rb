@@ -2,7 +2,7 @@ require 'test/unit'
 
 require 'sexp_path'
 
-class Test_SomethingToTest < Test::Unit::TestCase
+class SexpPathTest < Test::Unit::TestCase
   include SexpMatchSpecials
   
   def setup
@@ -100,8 +100,8 @@ class Test_SomethingToTest < Test::Unit::TestCase
     assert_search_count @ast_sexp, Q?{s(:defn, atom, include(:a))}, 2, 
       "Sexp should match :defn with an sexp including :a"
     
-    assert_search_count @ast_sexp, Q?{s(:defn, atom, include(:a))}, 2, 
-      "Sexp should match :defn with an sexp including :a"
+    assert_search_count @ast_sexp, Q?{include(:a)}, 2, 
+      "Sexp should match an sexp including :a"
     
     assert_search_count s(:a, s(:b, s(:c))), Q?{s(:a, include(:c))}, 0, 
       "Include should not descend"
@@ -124,16 +124,11 @@ class Test_SomethingToTest < Test::Unit::TestCase
     assert Q?{s(:a) & s(atom)}  == s(:a), "s(:a) matches both criteria"
   end
   
-  def test_child_matcher
-    assert Q?{_(s(:b))}   == s(:a, s(:b)),    "Should find s(:b)"
-    assert Q?{_(:b)}      == s(:a, s(:b)),    "Should find :b"
-    assert Q?{_(:b)}      == s(:a, s(:b,1)),  "Should find :b"
-    assert Q?{_(s(:b))}      == s(:a, s(:b,1)),  "Should not find s(:b)"
-    
+  def test_child_matcher    
     assert_search_count @ast_sexp, Q?{s(:class, :cake, _( s(:add, :a, :b) ) )}, 1,
       "Should match s(:class, :cake ...) and descend to find s(:add, :a, :b)"
-
-    assert_search_count @ast_sexp, Q?{s(:class, :cake, _(:a))}, 2,
+        
+    assert_search_count @ast_sexp, Q?{s(:class, :cake, _(include(:a)))}, 2,
       "Should match both the :a arguments"
   end
   

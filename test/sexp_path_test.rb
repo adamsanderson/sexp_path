@@ -134,6 +134,17 @@ class Test_SomethingToTest < Test::Unit::TestCase
       "Should match s(:class, :cake ...) and descend to find s(:add, :a, :b)"
   end
   
+  def test_pattern_matcher
+    assert Q?{m(/a/)}     == :a,        "Should match :a"
+    assert Q?{m(/^test/)} == :test_case,"Should match :test_case"
+    assert Q?{m('test')}  == :test,     "Should match :test #{Q?{m('test')}.inspect}"
+    assert Q?{m('test')}  != :test_case,"Should only match whole word 'test'"
+    assert Q?{m(/a/)}     != s(:a),     "Should not match s(:a)"
+    
+    assert_search_count @ast_sexp, Q?{s(m(/\w{3}/), :a, :b)}, 2,
+      "Should match s(:add, :a, :b) and s(:sub, :a, :b)"
+  end
+  
   # Still not sure if I like this
   def test_block_matching
     sb = SexpBlockMatch

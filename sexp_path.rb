@@ -5,13 +5,12 @@ require 'pp'
 module Traverse
   def search(pattern, &block)
     if pattern == self
-      block.call(self)
+      block.call(self) 
     end
-
+    
     self.each do |subset|
       case subset
-      when Sexp then
-        subset.search(pattern, &block)
+        when Sexp then subset.search(pattern, &block)
       end
     end
   end
@@ -107,6 +106,21 @@ class SexpAtom < SexpMatcher
   end
 end
 
+class SexpPatternMatcher < SexpMatcher
+  attr_reader :pattern
+  def initialize(pattern)
+    @pattern = pattern
+  end
+  
+  def ==(o)
+    !o.is_a?(Array) && o.to_s =~ pattern
+  end
+
+  def inspect
+    "m(#{pattern.inspect})"
+  end
+end
+
 class SexpWildCard < SexpMatcher
   def ==(o)
     return true
@@ -171,6 +185,12 @@ class SexpQuery
     
     def _(child)
       SexpChildMatcher.new(child)
+    end
+    
+    def m(* patterns)
+      patterns = patterns.map{|p| p.is_a?(Regexp) ? p : Regexp.new("\\A"+Regexp.escape(p.to_s)+"\\Z")}
+      regexp = Regexp.union(*patterns)
+      SexpPatternMatcher.new(regexp)
     end
   end
 end

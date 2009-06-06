@@ -30,7 +30,7 @@ class SexpMatcher < Sexp
   def & o
     SexpAllMatcher.new(self, o)
   end
-  
+    
   def inspect
     children = map{|e| e.inspect}.join(', ')
     "q(#{children})"
@@ -64,6 +64,21 @@ class SexpAllMatcher < SexpMatcher
   
   def inspect
     options.map{|o| o.inspect}.join(' & ')
+  end
+end
+
+class SexpChildMatcher < SexpMatcher
+  attr_reader :child
+  def initialize(child)
+    @child = child
+  end
+  
+  def == o
+    o == child || (o.respond_to?(:search) && o.search(child){ return true })
+  end
+  
+  def inspect
+    "_(#{child.inspect})"
   end
 end
 
@@ -143,11 +158,19 @@ class SexpQuery
     end
   
     def atom(*args)
-      if args.empty?
-        SexpAtom.new
-      else
-        SexpAnyMatcher.new(*args)
-      end
+      SexpAtom.new
+    end
+    
+    def any(*args)
+      SexpAnyMatcher.new(*args)
+    end
+    
+    def all(*args)
+      SexpAllMatcher.new(*args)
+    end
+    
+    def _(child)
+      SexpChildMatcher.new(child)
     end
   end
 end

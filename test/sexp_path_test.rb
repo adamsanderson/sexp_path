@@ -59,6 +59,14 @@ class Test_SomethingToTest < Test::Unit::TestCase
       "atom should not match s()"
   end
   
+  def test_searching_with_any
+    assert_search_count s(:foo, s(:a), s(:b)), Q?{s(any(:a,:b))}, 2, 
+      "should not match either :a or :b"
+      
+    assert_search_count s(:foo, s(:a), s(:b)), Q?{any( s(:a) ,s(:c))}, 1, 
+      "sexp should not match s(:a)"
+  end
+  
   def test_equality_of_wildacard
     w = SexpWildCard.new
     assert w == :a,  "Should match a symbol"
@@ -99,7 +107,7 @@ class Test_SomethingToTest < Test::Unit::TestCase
       "Include should not descend"
   end
   
-  def test_sexp_matcher_or_syntax
+  def test_or_matcher
     assert Q?{s(:a) | s(:b)}  == s(:a), "q(:a) should match s(:a)"
     assert Q?{s(:a) | s(:b)}  != s(:c), "Should not match s(:c)"
     
@@ -111,9 +119,19 @@ class Test_SomethingToTest < Test::Unit::TestCase
   end
   
   # For symetry, kind of silly examples
-  def test_sexp_matcher_and_syntax
+  def test_and_matcher
     assert Q?{s(:a) & s(:b)}    != s(:a), "s(:a) is not both s(:a) and s(:b)"
     assert Q?{s(:a) & s(atom)}  == s(:a), "s(:a) matches both criteria"
+  end
+  
+  def test_child_matcher
+    assert Q?{_(s(:b))}   == s(:a, s(:b)),    "Should find s(:b)"
+    assert Q?{_(:b)}      == s(:a, s(:b)),    "Should find :b"
+    assert Q?{_(:b)}      == s(:a, s(:b,1)),  "Should find :b"
+    assert Q?{_(s(:b))}      == s(:a, s(:b,1)),  "Should not find s(:b)"
+    
+    assert_search_count @ast_sexp, Q?{s(:class, :cake, _( s(:add, :a, :b) ) )}, 1,
+      "Should match s(:class, :cake ...) and descend to find s(:add, :a, :b)"
   end
   
   # Still not sure if I like this

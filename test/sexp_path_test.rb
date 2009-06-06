@@ -49,13 +49,13 @@ class Test_SomethingToTest < Test::Unit::TestCase
   end
   
   def test_searching_with_atom    
-    assert_search_count s(:add, :a, :b), Q?{s(:add, ATOM, :b)} , 1, 
+    assert_search_count s(:add, :a, :b), Q?{s(:add, atom, :b)} , 1, 
       "atom should match :a"
       
-    assert_search_count @ast_sexp, Q?{s(:defn, ATOM, s(ATOM, :a, :b) )}, 2, 
+    assert_search_count @ast_sexp, Q?{s(:defn, atom, s(atom, :a, :b) )}, 2, 
       "atoms should match :foo/:bar and :add/:sub"
       
-    assert_search_count s(:a, s()), Q?{s(:a, ATOM)}, 0, 
+    assert_search_count s(:a, s()), Q?{s(:a, atom)}, 0, 
       "atom should not match s()"
   end
   

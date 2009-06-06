@@ -15,11 +15,55 @@ module Traverse
       end
     end
   end
+  
 end
 
-class SexpMatcher < SexpMatchSpecial
+class SexpMatcher < Sexp
   def ===(o)
     self == o
+  end
+  
+  def | o
+    SexpAnyMatcher.new(self, o)
+  end
+  
+  def & o
+    SexpAllMatcher.new(self, o)
+  end
+  
+  def inspect
+    children = map{|e| e.inspect}.join(', ')
+    "q(#{children})"
+  end
+end
+
+class SexpAnyMatcher < SexpMatcher
+  attr_reader :options
+  def initialize(*options)
+    @options = options
+  end
+  
+  def == o
+    options.any?{|exp| exp == o}
+  end
+  
+  def inspect
+    options.map{|o| o.inspect}.join(' | ')
+  end
+end
+
+class SexpAllMatcher < SexpMatcher
+  attr_reader :options
+  def initialize(*options)
+    @options = options
+  end
+  
+  def == o
+    options.all?{|exp| exp == o}
+  end
+  
+  def inspect
+    options.map{|o| o.inspect}.join(' & ')
   end
 end
 
@@ -44,7 +88,7 @@ class SexpAtom < SexpMatcher
   end
 
   def inspect
-    "ATOM"
+    "atom"
   end
 end
 
@@ -54,7 +98,7 @@ class SexpWildCard < SexpMatcher
   end
   
   def inspect
-    "WILD"
+    "wild"
   end
 end
 
@@ -78,6 +122,40 @@ class SexpInclude < SexpMatcher
   end
 end
 
+class SexpQuery
+  WILD = SexpWildCard.new()
+  
+  class << self
+    def do(&block)
+      instance_eval(&block)
+    end
+  
+    def s(*args)
+      SexpMatcher.new(*args)
+    end
+  
+    def wild()
+      WILD
+    end
+    
+    def include(child)
+      SexpInclude.new(child)
+    end
+  
+    def atom(*args)
+      if args.empty?
+        SexpAtom.new
+      else
+        SexpAnyMatcher.new(*args)
+      end
+    end
+  end
+end
+
+def Q?(&block)
+  SexpQuery.do(&block)
+end
+
 module SexpMatchSpecials
   ATOM = SexpAtom.new
   WILD = SexpWildCard.new
@@ -86,47 +164,12 @@ end
 
 class Sexp
   include Traverse
-end
-
-if __FILE__ == $0
-  include SexpMatchSpecials
   
-  sexp = s(:class, :Cake, s(
-      s(:defn, :foo, 
-        s(:add, :a, :b)
-      ),
-      s(:defn, :bar, 
-        s(:sub, :a, :b)
-      )
-    )
-  )
-  
-  pp sexp
-  puts "Search :defn"
-  sexp.search(s(:defn)){|m| pp m}
-  
-  puts "Search :class"
-  sexp.search(s(:class)){|m| pp m}
-    
-  puts "Search (:add, :a, :b)"
-  sexp.search(s(:add, :a, :b)){|m| pp m}
-  
-  puts "Search (:add, ATOM(), :b)"
-  sexp.search(s(:add, ATOM(), :b)){|m| pp m}
-  
-  puts "Search (:defn, :foo, ANY())"
-  sexp.search(s(:defn, :foo, ANY())){|m| pp m}
-  
-  puts "Search INCLUDE(:a)"
-  sexp.search(INCLUDE(:a)){|m| pp m}
-  
-  # puts "Search ANY"
-  # sexp.search( ANY() ){|m| pp m}
-  
-  puts "Each of type :defn"
-  sexp.each_of_type(:defn){|m| pp m}
-  
-  puts "Each of type ANY"
-  sexp.each_of_type( ANY() ){|m| pp m}
-  
+  def ==(obj) # :nodoc:
+    if obj.is_a?(Sexp) then
+      super
+    else
+      false
+    end
+  end
 end

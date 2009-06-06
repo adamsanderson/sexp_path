@@ -101,12 +101,19 @@ class Test_SomethingToTest < Test::Unit::TestCase
   
   def test_sexp_matcher_or_syntax
     assert Q?{s(:a) | s(:b)}  == s(:a), "q(:a) should match s(:a)"
+    assert Q?{s(:a) | s(:b)}  != s(:c), "Should not match s(:c)"
     
     assert_search_count s(:a, s(:b, :c), s(:b, :d)), Q?{s(:b, :c) | s(:b, :d)}, 2, 
       "Should match both (:b, :c) and (:b, :d)"
       
     assert_search_count @ast_sexp, Q?{s(:add, :a, :b) | s(:defn, :bar, WILD)}, 2, 
       "Should match at any level" 
+  end
+  
+  # For symetry, kind of silly examples
+  def test_sexp_matcher_and_syntax
+    assert Q?{s(:a) & s(:b)}    != s(:a), "s(:a) is not both s(:a) and s(:b)"
+    assert Q?{s(:a) & s(atom)}  == s(:a), "s(:a) matches both criteria"
   end
   
   # Still not sure if I like this

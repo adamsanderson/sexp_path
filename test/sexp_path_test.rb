@@ -132,6 +132,9 @@ class Test_SomethingToTest < Test::Unit::TestCase
     
     assert_search_count @ast_sexp, Q?{s(:class, :cake, _( s(:add, :a, :b) ) )}, 1,
       "Should match s(:class, :cake ...) and descend to find s(:add, :a, :b)"
+
+    assert_search_count @ast_sexp, Q?{s(:class, :cake, _(:a))}, 2,
+      "Should match both the :a arguments"
   end
   
   def test_pattern_matcher

@@ -143,6 +143,11 @@ class SexpPathTest < Test::Unit::TestCase
       "Should match s(:add, :a, :b) and s(:sub, :a, :b)"
   end
   
+  def test_match_method
+    assert_equal 1, @ast_sexp.match( s(:sub, :a, :b)).length
+    assert_equal 2, @ast_sexp.match( Q?{s(:defn, atom, wild)} ).length
+  end
+  
   # Still not sure if I like this
   def test_block_matching
     sb = SexpBlockMatch

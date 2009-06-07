@@ -3,6 +3,22 @@ require 'sexp_processor'
 require 'pp'
 
 module Traverse
+  def match(pattern)
+    matches = []
+    
+    if pattern == self
+      matches << self
+    end
+    
+    self.each do |subset|
+      case subset
+        when Sexp then matches.concat subset.match(pattern)
+      end
+    end
+    
+    matches
+  end
+    
   def search(pattern, &block)
     if pattern == self
       block.call(self) 

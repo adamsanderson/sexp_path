@@ -160,6 +160,13 @@ class SexpPathTest < Test::Unit::TestCase
     assert_equal [s(:add, :a, :b), s(:sub, :a, :b)], collection
   end
   
+  def test_tag_matching
+    assert Q?{tag(:a)} == s(:a)
+    assert Q?{tag(:a)} == s(:a, :b, s(:oh_hai), :d)
+    assert_search_count @ast_sexp, Q?{tag(:defn)}, 2,
+      "Should match s(:defn, _, _)"
+  end
+  
   # Still not sure if I like this
   def test_block_matching
     sb = SexpBlockMatch

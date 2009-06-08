@@ -133,6 +133,21 @@ class SexpPatternMatcher < SexpMatcher
   end
 end
 
+class SexpTagMatcher < SexpMatcher
+  attr_reader :tag
+  def initialize(tag)
+    @tag = tag
+  end
+  
+  def ==(o)
+    o.is_a?(Sexp) && o.first == tag
+  end
+
+  def inspect
+    "tag(#{tag.inspect})"
+  end
+end
+
 class SexpWildCard < SexpMatcher
   def ==(o)
     return true
@@ -197,6 +212,10 @@ class SexpQuery
     
     def _(child)
       SexpChildMatcher.new(child)
+    end
+    
+    def tag(name)
+      SexpTagMatcher.new(name)
     end
     
     def m(* patterns)

@@ -148,6 +148,18 @@ class SexpPathTest < Test::Unit::TestCase
     assert_equal 2, @ast_sexp.search( Q?{s(:defn, atom, wild)} ).length
   end
   
+  def test_search_collection
+    # test method
+    assert_equal SexpCollection, @ast_sexp.search( s(:sub, :a, :b)).class
+    # test binary operator
+    assert_equal SexpCollection, (@ast_sexp / s(:sub, :a, :b)).class
+    # test sub searches
+    collection = @ast_sexp / Q?{s(:defn, atom, wild)} / Q?{s(atom, :a, :b)}
+    assert_equal SexpCollection, collection.class
+    assert_equal 2, collection.length
+    assert_equal [s(:add, :a, :b), s(:sub, :a, :b)], collection
+  end
+  
   # Still not sure if I like this
   def test_block_matching
     sb = SexpBlockMatch

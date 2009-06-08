@@ -5,9 +5,10 @@ require 'pp'
 
 module Traverse
   def search(pattern)
-    Enumerable::Enumerator.new(self, :search_each, pattern).inject([]){|m,e| m << e; m}
+    Enumerable::Enumerator.new(self, :search_each, pattern).inject(SexpCollection.new){|m,e| m << e; m}
   end
-    
+  alias_method :/, :search
+  
   def search_each(pattern, &block)
     if pattern == self
       block.call(self) 
@@ -19,7 +20,13 @@ module Traverse
       end
     end
   end
-  
+end
+
+class SexpCollection < Array
+  def search(pattern)
+    inject(SexpCollection.new){|collection, sexp| collection.concat sexp.search(pattern) }
+  end
+  alias_method :/, :search
 end
 
 class SexpMatcher < Sexp

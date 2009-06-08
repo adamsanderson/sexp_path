@@ -1,10 +1,7 @@
 require 'test/unit'
-
 require 'sexp_path'
 
-class SexpPathTest < Test::Unit::TestCase
-  include SexpMatchSpecials
-  
+class SexpPathTest < Test::Unit::TestCase  
   def setup
     @ast_sexp = # Imagine it looks like a ruby AST
       s(:class, :cake, 
@@ -78,11 +75,14 @@ class SexpPathTest < Test::Unit::TestCase
   def test_searching_with_wildcard
     assert_search_count s(:add, :a, :b), Q?{s(:add, wild, :b)} , 1, 
       "wild should match :a"
+    
+    assert_search_count @ast_sexp, Q?{s(:defn, :bar, _)}, 1,
+      "should match s(:defn, :bar, s(..))"
       
-    assert_search_count @ast_sexp, Q?{s(:defn, wild, s(wild, :a, :b) )}, 2, 
+    assert_search_count @ast_sexp, Q?{s(:defn, _, s(_, :a, :b) )}, 2, 
       "wilds should match :foo/:bar and :add/:sub"
       
-    assert_search_count s(:a, s()), Q?{s(:a, wild)}, 1, 
+    assert_search_count s(:a, s()), Q?{s(:a, _)}, 1, 
       "wild should match s()"
     
     assert_search_count s(:a, :b, :c), Q?{s(_,_,_)}, 1, 

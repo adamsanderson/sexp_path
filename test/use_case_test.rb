@@ -5,6 +5,10 @@ require 'set'
 
 # Here's a crazy idea, these tests actually use sexp_path on some "real"
 # code to see if it can satisfy my requirements.
+#
+# These tests are two fold:
+# 1. Make sure it works
+# 2. Make sure it's not painful to use
 class UseCaseTest < Test::Unit::TestCase  
   def setup
     path = File.dirname(__FILE__) + '/sample.rb'
@@ -46,6 +50,23 @@ class UseCaseTest < Test::Unit::TestCase
     
     assert_equal 1, repeated, "Should have caught test_a being repeated"
   end
+  
+  def test_rewriting_colon2s_oh_man_i_hate_those_in_most_cases_but_i_understand_why_they_are_there
+    colon2 = Q?{ s(:colon2, s(:const, atom), atom) }
+    
+    # Hacky, obviously could be done better
+    while (results = (@sexp / colon2)) && !results.empty?
+      results.each do |result|
+        scope = result.flatten[-2..-1]
+        result.replace(s(:const, :"#{scope.join '::'}"))
+      end
+    end
+    
+    expected_sexp = s(:const, :"Test::Unit::TestCase")
+    assert_equal 1, (@sexp / expected_sexp).length, @sexp.inspect
+  end
+  
+  
 end
 
 # Contents of sample.rb sexp below:

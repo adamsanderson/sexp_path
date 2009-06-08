@@ -110,7 +110,7 @@ end
 
 class SexpAtom < SexpMatcher
   def ==(o)
-    !o.is_a? Array
+    !o.is_a? Sexp
   end
 
   def inspect
@@ -125,7 +125,7 @@ class SexpPatternMatcher < SexpMatcher
   end
   
   def ==(o)
-    !o.is_a?(Array) && o.to_s =~ pattern
+    !o.is_a?(Sexp) && o.to_s =~ pattern
   end
 
   def inspect
@@ -133,18 +133,18 @@ class SexpPatternMatcher < SexpMatcher
   end
 end
 
-class SexpTagMatcher < SexpMatcher
-  attr_reader :tag
-  def initialize(tag)
-    @tag = tag
+class SexpTypeMatcher < SexpMatcher
+  attr_reader :sexp_type
+  def initialize(type)
+    @sexp_type = type
   end
   
   def ==(o)
-    o.is_a?(Sexp) && o.first == tag
+    o.is_a?(Sexp) && o.sexp_type == sexp_type
   end
 
   def inspect
-    "tag(#{tag.inspect})"
+    "t(#{sexp_type.inspect})"
   end
 end
 
@@ -210,12 +210,12 @@ class SexpQuery
       SexpAllMatcher.new(*args)
     end
     
-    def _(child)
+    def child(child)
       SexpChildMatcher.new(child)
     end
     
-    def tag(name)
-      SexpTagMatcher.new(name)
+    def t(name)
+      SexpTypeMatcher.new(name)
     end
     
     def m(* patterns)

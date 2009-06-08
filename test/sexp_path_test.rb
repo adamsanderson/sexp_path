@@ -44,7 +44,6 @@ class SexpPathTest < Test::Unit::TestCase
     assert a == :a,  "Should match a symbol"
     assert a == 1,   "Should match a number"
     assert a == nil, "Should match nil"
-    assert a != [],  "Should not match an array"
     assert a != s(), "Should not match an sexp"
   end
   
@@ -125,10 +124,10 @@ class SexpPathTest < Test::Unit::TestCase
   end
   
   def test_child_matcher    
-    assert_search_count @ast_sexp, Q?{s(:class, :cake, _( s(:add, :a, :b) ) )}, 1,
+    assert_search_count @ast_sexp, Q?{s(:class, :cake, child( s(:add, :a, :b) ) )}, 1,
       "Should match s(:class, :cake ...) and descend to find s(:add, :a, :b)"
         
-    assert_search_count @ast_sexp, Q?{s(:class, :cake, _(include(:a)))}, 1,
+    assert_search_count @ast_sexp, Q?{s(:class, :cake, child(include(:a)))}, 1,
       "Should match once since there exists a child which includes :a"
   end
   
@@ -160,10 +159,10 @@ class SexpPathTest < Test::Unit::TestCase
     assert_equal [s(:add, :a, :b), s(:sub, :a, :b)], collection
   end
   
-  def test_tag_matching
-    assert Q?{tag(:a)} == s(:a)
-    assert Q?{tag(:a)} == s(:a, :b, s(:oh_hai), :d)
-    assert_search_count @ast_sexp, Q?{tag(:defn)}, 2,
+  def test_sexp_type_matching
+    assert Q?{t(:a)} == s(:a)
+    assert Q?{t(:a)} == s(:a, :b, s(:oh_hai), :d)
+    assert_search_count @ast_sexp, Q?{t(:defn)}, 2,
       "Should match s(:defn, _, _)"
   end
   

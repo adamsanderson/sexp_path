@@ -58,15 +58,13 @@ class UseCaseTest < Test::Unit::TestCase
     while (results = (@sexp / colon2)) && !results.empty?
       results.each do |result|
         scope = result.flatten[-2..-1]
-        result.replace(s(:const, :"#{scope.join '::'}"))
+        result.replace(s(:const, "#{scope.join '::'}"))
       end
     end
     
-    expected_sexp = s(:const, :"Test::Unit::TestCase")
+    expected_sexp = s(:const, "Test::Unit::TestCase")
     assert_equal 1, (@sexp / expected_sexp).length, @sexp.inspect
   end
-  
-  
 end
 
 # Contents of sample.rb sexp below:

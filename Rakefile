@@ -6,7 +6,7 @@ begin
   require 'jeweler'
   
   Jeweler::Tasks.new do |s|
-    s.name = "open_gem"
+    s.name = "sexp_path"
     s.summary = "Pattern matching for S Expressions (sexp)."
     s.description = <<-DESC
       Allows you to do example based pattern matching and queries against S Expressions (sexp).

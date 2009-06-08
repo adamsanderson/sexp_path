@@ -84,7 +84,10 @@ class SexpPathTest < Test::Unit::TestCase
       
     assert_search_count s(:a, s()), Q?{s(:a, wild)}, 1, 
       "wild should match s()"
-      
+    
+    assert_search_count s(:a, :b, :c), Q?{s(_,_,_)}, 1, 
+      "multiple wilds should work"
+    
     assert_search_count @ast_sexp, Q?{wild}, 6, 
       "wild should match every sub expression"
   end
@@ -113,7 +116,7 @@ class SexpPathTest < Test::Unit::TestCase
     assert_search_count s(:a, s(:b, :c), s(:b, :d)), Q?{s(:b, :c) | s(:b, :d)}, 2, 
       "Should match both (:b, :c) and (:b, :d)"
       
-    assert_search_count @ast_sexp, Q?{s(:add, :a, :b) | s(:defn, :bar, WILD)}, 2, 
+    assert_search_count @ast_sexp, Q?{s(:add, :a, :b) | s(:defn, :bar, _)}, 2, 
       "Should match at any level" 
   end
   
@@ -153,7 +156,7 @@ class SexpPathTest < Test::Unit::TestCase
     # test binary operator
     assert_equal SexpCollection, (@ast_sexp / s(:sub, :a, :b)).class
     # test sub searches
-    collection = @ast_sexp / Q?{s(:defn, atom, wild)} / Q?{s(atom, :a, :b)}
+    collection = @ast_sexp / Q?{s(:defn, atom, _)} / Q?{s(atom, :a, :b)}
     assert_equal SexpCollection, collection.class
     assert_equal 2, collection.length
     assert_equal [s(:add, :a, :b), s(:sub, :a, :b)], collection

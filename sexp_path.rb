@@ -193,6 +193,7 @@ class SexpQuery
     def wild()
       WILD
     end
+    alias_method :_, :wild
     
     def include(child)
       SexpInclude.new(child)

@@ -1,32 +1,21 @@
 require 'rubygems'
 require 'sexp_processor'
+require 'enumerator'
 require 'pp'
 
 module Traverse
-  def match(pattern)
-    matches = []
-    
-    if pattern == self
-      matches << self
-    end
-    
-    self.each do |subset|
-      case subset
-        when Sexp then matches.concat subset.match(pattern)
-      end
-    end
-    
-    matches
+  def search(pattern)
+    Enumerable::Enumerator.new(self, :search_each, pattern).inject([]){|m,e| m << e; m}
   end
     
-  def search(pattern, &block)
+  def search_each(pattern, &block)
     if pattern == self
       block.call(self) 
     end
     
     self.each do |subset|
       case subset
-        when Sexp then subset.search(pattern, &block)
+        when Sexp then subset.search_each(pattern, &block)
       end
     end
   end
@@ -89,7 +78,7 @@ class SexpChildMatcher < SexpMatcher
   end
   
   def == o
-    o == child || (o.respond_to?(:search) && o.search(child){ return true })
+    o == child || (o.respond_to?(:search_each) && o.search_each(child){ return true })
   end
   
   def inspect

@@ -143,9 +143,9 @@ class SexpPathTest < Test::Unit::TestCase
       "Should match s(:add, :a, :b) and s(:sub, :a, :b)"
   end
   
-  def test_match_method
-    assert_equal 1, @ast_sexp.match( s(:sub, :a, :b)).length
-    assert_equal 2, @ast_sexp.match( Q?{s(:defn, atom, wild)} ).length
+  def test_search_method
+    assert_equal 1, @ast_sexp.search( s(:sub, :a, :b)).length
+    assert_equal 2, @ast_sexp.search( Q?{s(:defn, atom, wild)} ).length
   end
   
   # Still not sure if I like this
@@ -162,7 +162,7 @@ class SexpPathTest < Test::Unit::TestCase
   private
   def assert_search_count(sexp, example, count, message)
     i = 0
-    sexp.search(example){|m| i += 1}
+    sexp.search_each(example){|m| i += 1}
     assert_equal count, i, message + "\nSearching for: #{example.inspect}\nIn: #{sexp.inspect}"
   end
 end

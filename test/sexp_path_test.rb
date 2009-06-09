@@ -38,10 +38,10 @@ class SexpPathTest < Test::Unit::TestCase
   
   def test_equality_of_atom
     a = SexpAtom.new
-    assert a == :a,  "Should match a symbol"
-    assert a == 1,   "Should match a number"
-    assert a == nil, "Should match nil"
-    assert a != s(), "Should not match an sexp"
+    assert a.satisfy?(:a),  "Should match a symbol"
+    assert a.satisfy?(1),   "Should match a number"
+    assert a.satisfy?(nil), "Should match nil"
+    assert !a.satisfy?(s()), "Should not match an sexp"
   end
   
   def test_searching_with_atom    
@@ -65,11 +65,11 @@ class SexpPathTest < Test::Unit::TestCase
   
   def test_equality_of_wildacard
     w = SexpWildCard.new
-    assert w == :a,  "Should match a symbol"
-    assert w == 1,   "Should match a number"
-    assert w == nil, "Should match nil"
-    assert w == [],  "Should match an array"
-    assert w == s(), "Should match an sexp"
+    assert w.satisfy?(:a  ),  "Should match a symbol"
+    assert w.satisfy?(1   ),   "Should match a number"
+    assert w.satisfy?(nil ), "Should match nil"
+    assert w.satisfy?([]  ),  "Should match an array"
+    assert w.satisfy?(s() ), "Should match an sexp"
   end
   
   def test_searching_with_wildcard
@@ -110,8 +110,8 @@ class SexpPathTest < Test::Unit::TestCase
   end
   
   def test_or_matcher
-    assert Q?{s(:a) | s(:b)}  == s(:a), "q(:a) should match s(:a)"
-    assert Q?{s(:a) | s(:b)}  != s(:c), "Should not match s(:c)"
+    assert Q?{s(:a) | s(:b)}.satisfy?( s(:a) ), "q(:a) should match s(:a)"
+    assert !Q?{s(:a) | s(:b)}.satisfy?( s(:c) ), "Should not match s(:c)"
     
     assert_search_count s(:a, s(:b, :c), s(:b, :d)), Q?{s(:b, :c) | s(:b, :d)}, 2, 
       "Should match both (:b, :c) and (:b, :d)"
@@ -122,8 +122,8 @@ class SexpPathTest < Test::Unit::TestCase
   
   # For symetry, kind of silly examples
   def test_and_matcher
-    assert Q?{s(:a) & s(:b)}    != s(:a), "s(:a) is not both s(:a) and s(:b)"
-    assert Q?{s(:a) & s(atom)}  == s(:a), "s(:a) matches both criteria"
+    assert !Q?{s(:a) & s(:b)}.satisfy?(s(:a)), "s(:a) is not both s(:a) and s(:b)"
+    assert Q?{s(:a) & s(atom)}.satisfy?(s(:a)), "s(:a) matches both criteria"
   end
   
   def test_child_matcher    
@@ -135,11 +135,11 @@ class SexpPathTest < Test::Unit::TestCase
   end
   
   def test_pattern_matcher
-    assert Q?{m(/a/)}     == :a,        "Should match :a"
-    assert Q?{m(/^test/)} == :test_case,"Should match :test_case"
-    assert Q?{m('test')}  == :test,     "Should match :test #{Q?{m('test')}.inspect}"
-    assert Q?{m('test')}  != :test_case,"Should only match whole word 'test'"
-    assert Q?{m(/a/)}     != s(:a),     "Should not match s(:a)"
+    assert Q?{m(/a/)}.satisfy?(:a),             "Should match :a"
+    assert Q?{m(/^test/)}.satisfy?(:test_case), "Should match :test_case"
+    assert Q?{m('test')}.satisfy?(:test),       "Should match :test #{Q?{m('test')}.inspect}"
+    assert !Q?{m('test')}.satisfy?(:test_case), "Should only match whole word 'test'"
+    assert !Q?{m(/a/)}.satisfy?(s(:a)),         "Should not match s(:a)"
     
     assert_search_count @ast_sexp, Q?{s(m(/\w{3}/), :a, :b)}, 2,
       "Should match s(:add, :a, :b) and s(:sub, :a, :b)"
@@ -163,8 +163,8 @@ class SexpPathTest < Test::Unit::TestCase
   end
   
   def test_sexp_type_matching
-    assert Q?{t(:a)} == s(:a)
-    assert Q?{t(:a)} == s(:a, :b, s(:oh_hai), :d)
+    assert Q?{t(:a)}.satisfy?( s(:a) )
+    assert Q?{t(:a)}.satisfy?( s(:a, :b, s(:oh_hai), :d) )
     assert_search_count @ast_sexp, Q?{t(:defn)}, 2,
       "Should match s(:defn, _, _)"
   end
@@ -173,8 +173,8 @@ class SexpPathTest < Test::Unit::TestCase
   def test_block_matching
     sb = SexpBlockMatch
     
-    assert sb.new{|o| o == s(:a)}     == s(:a), "Should match simple equality"
-    assert sb.new{|o| o.length == 1}  == s(:a), "Should match length check"
+    assert sb.new{|o| o == s(:a)}.satisfy?(s(:a)), "Should match simple equality"
+    assert sb.new{|o| o.length == 1}.satisfy?(s(:a)), "Should match length check"
     
     assert_search_count s(:a, s(:b), s(:c), s(:d,:t) ), sb.new{|o| o.length == 2 }, 1, 
       "Should match s(:d, :t)"

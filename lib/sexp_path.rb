@@ -10,7 +10,9 @@ module Traverse
   alias_method :/, :search
   
   def search_each(pattern, &block)
-    if pattern == self
+    return false unless pattern.is_a? Sexp
+    
+    if pattern.satisfy? self
       block.call(self) 
     end
     
@@ -30,10 +32,6 @@ class SexpCollection < Array
 end
 
 class SexpMatcher < Sexp
-  def ===(o)
-    self == o
-  end
-  
   def | o
     SexpAnyMatcher.new(self, o)
   end
@@ -54,8 +52,8 @@ class SexpAnyMatcher < SexpMatcher
     @options = options
   end
   
-  def == o
-    options.any?{|exp| exp == o}
+  def satisfy?(o)
+    options.any?{|exp| exp.is_a?(Sexp) ? exp.satisfy?(o) : exp == o}
   end
   
   def inspect
@@ -69,8 +67,8 @@ class SexpAllMatcher < SexpMatcher
     @options = options
   end
   
-  def == o
-    options.all?{|exp| exp == o}
+  def satisfy?(o)
+    options.all?{|exp| exp.is_a?(Sexp) ? exp.satisfy?(o) : exp == o}
   end
   
   def inspect
@@ -84,8 +82,8 @@ class SexpChildMatcher < SexpMatcher
     @child = child
   end
   
-  def == o
-    o == child || (o.respond_to?(:search_each) && o.search_each(child){ return true })
+  def satisfy?(o)
+    child.satisfy?(o) || (o.respond_to?(:search_each) && o.search_each(child){ return true })
   end
   
   def inspect
@@ -99,7 +97,7 @@ class SexpBlockMatch < SexpMatcher
     @exp = block
   end
   
-  def ==(o)
+  def satisfy?(o)
     !!@exp[o]
   end
   
@@ -109,7 +107,7 @@ class SexpBlockMatch < SexpMatcher
 end
 
 class SexpAtom < SexpMatcher
-  def ==(o)
+  def satisfy?(o)
     !o.is_a? Sexp
   end
 
@@ -124,7 +122,7 @@ class SexpPatternMatcher < SexpMatcher
     @pattern = pattern
   end
   
-  def ==(o)
+  def satisfy?(o)
     !o.is_a?(Sexp) && o.to_s =~ pattern
   end
 
@@ -139,7 +137,7 @@ class SexpTypeMatcher < SexpMatcher
     @sexp_type = type
   end
   
-  def ==(o)
+  def satisfy?(o)
     o.is_a?(Sexp) && o.sexp_type == sexp_type
   end
 
@@ -149,8 +147,8 @@ class SexpTypeMatcher < SexpMatcher
 end
 
 class SexpWildCard < SexpMatcher
-  def ==(o)
-    return true
+  def satisfy?(o)
+    true
   end
   
   def inspect
@@ -165,11 +163,11 @@ class SexpInclude < SexpMatcher
     @value = value
   end
   
-  def ==(o)
+  def satisfy?(o)
     if o.respond_to? :include?
-      return o.include?(value)
+      return o.any?{|c| value.is_a?(Sexp) ? value.satisfy?(c) : value == c}
     else
-      o == value
+      value.satisfy? c
     end
   end
   
@@ -231,20 +229,23 @@ def Q?(&block)
   SexpQuery.do(&block)
 end
 
-module SexpMatchSpecials
-  ATOM = SexpAtom.new
-  WILD = SexpWildCard.new
-  def INCLUDE(sexp); return SexpInclude.new(sexp); end
-end
-
 class Sexp
   include Traverse
   
-  def ==(obj) # :nodoc:
+  # Slight modification of Sexp equality so that we will consider anything that is
+  # an Sexp, or a descendant of a sexp.
+  def ==(obj)
     if obj.is_a?(Sexp) then
       super
     else
       false
     end
+  end
+  
+  def satisfy?(o)
+    return false unless o.is_a? Sexp
+    return false unless length == o.length
+    each_with_index{|c,i| return false unless c.is_a?(Sexp) ? c.satisfy?( o[i] ) : c == o[i] }
+    true
   end
 end

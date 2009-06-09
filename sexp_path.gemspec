@@ -13,6 +13,7 @@ Gem::Specification.new do |s|
   s.files = [
     "Rakefile",
     "VERSION.yml",
+    "lib/sexp_path.rb",
     "test/sample.rb",
     "test/sexp_path_test.rb",
     "test/use_case_test.rb"

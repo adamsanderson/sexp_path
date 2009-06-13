@@ -1,7 +1,7 @@
 require 'test/unit'
 require 'sexp_path'
 
-class SexpPathTest < Test::Unit::TestCase  
+class SexpMatchingPathTest < Test::Unit::TestCase  
   def setup
     @ast_sexp = # Imagine it looks like a ruby AST
       s(:class, :cake, 

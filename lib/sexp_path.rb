@@ -246,6 +246,13 @@ class Sexp
     return false unless o.is_a? Sexp
     return false unless length == o.length
     each_with_index{|c,i| return false unless c.is_a?(Sexp) ? c.satisfy?( o[i] ) : c == o[i] }
-    true
+    {}
   end
+  
+  def capture_as(name)
+    @capture_name = name
+    self
+  end
+  alias_method :%, :capture_as
+  
 end

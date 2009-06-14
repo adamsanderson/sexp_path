@@ -183,7 +183,7 @@ class SexpMatchingPathTest < Test::Unit::TestCase
   private
   def assert_search_count(sexp, example, count, message)
     i = 0
-    sexp.search_each(example){|m| i += 1}
+    sexp.search_each(example){|match, data| i += 1}
     assert_equal count, i, message + "\nSearching for: #{example.inspect}\nIn: #{sexp.inspect}"
   end
 end

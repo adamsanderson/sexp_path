@@ -5,15 +5,17 @@ require 'pp'
 
 module Traverse
   def search(pattern)
-    Enumerable::Enumerator.new(self, :search_each, pattern).inject(SexpCollection.new){|m,e| m << e; m}
+    collection = SexpCollection.new
+    search_each(pattern){|match, data| collection << match}
+    collection
   end
   alias_method :/, :search
   
-  def search_each(pattern, &block)
+  def search_each(pattern, data={}, &block)
     return false unless pattern.is_a? Sexp
     
-    if pattern.satisfy? self
-      block.call(self) 
+    if pattern.satisfy?(self, data)
+      block.call(self, data)
     end
     
     self.each do |subset|

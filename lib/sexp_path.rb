@@ -99,7 +99,7 @@ class SexpChildMatcher < SexpMatcher
       capture_match o, data
     elsif o.is_a? Sexp
       o.search_each(child,data) do 
-        return capture_match o, data
+        return capture_match(o, data)
       end
     end
   end

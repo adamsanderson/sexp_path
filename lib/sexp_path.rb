@@ -64,7 +64,6 @@ class SexpAnyMatcher < SexpMatcher
     return nil unless options.any?{|exp| exp.is_a?(Sexp) ? exp.satisfy?(o, data) : exp == o}
     
     capture_match o, data
-    data
   end
   
   def inspect
@@ -82,7 +81,6 @@ class SexpAllMatcher < SexpMatcher
     return nil unless options.all?{|exp| exp.is_a?(Sexp) ? exp.satisfy?(o, data) : exp == o}
     
     capture_match o, data
-    data
   end
   
   def inspect
@@ -99,11 +97,9 @@ class SexpChildMatcher < SexpMatcher
   def satisfy?(o, data={})
     if child.satisfy?(o,data)
       capture_match o, data
-      data
     elsif o.is_a? Sexp
       o.search_each(child,data) do 
-        capture_match o, data
-        return data 
+        return capture_match o, data
       end
     end
   end
@@ -123,7 +119,6 @@ class SexpBlockMatch < SexpMatcher
     return nil unless @exp[o]
     
     capture_match o, data
-    data
   end
   
   def inspect
@@ -136,7 +131,6 @@ class SexpAtom < SexpMatcher
     return nil if o.is_a? Sexp
     
     capture_match o, data
-    data
   end
 
   def inspect
@@ -154,7 +148,6 @@ class SexpPatternMatcher < SexpMatcher
     return nil unless !o.is_a?(Sexp) && o.to_s =~ pattern
 
     capture_match o, data
-    data
   end
 
   def inspect
@@ -172,7 +165,6 @@ class SexpTypeMatcher < SexpMatcher
     return nil unless o.is_a?(Sexp) && o.sexp_type == sexp_type
     
     capture_match o, data
-    data
   end
 
   def inspect
@@ -183,7 +175,6 @@ end
 class SexpWildCard < SexpMatcher
   def satisfy?(o, data={})
     capture_match o, data
-    data
   end
   
   def inspect
@@ -204,7 +195,6 @@ class SexpInclude < SexpMatcher
     end
     
     capture_match o, data
-    data
   end
   
   def inspect
@@ -272,7 +262,6 @@ class Sexp
     each_with_index{|c,i| return false unless c.is_a?(Sexp) ? c.satisfy?( o[i], data ) : c == o[i] }
 
     capture_match(o, data)
-    data
   end
   
   def capture_as(name)
@@ -286,5 +275,7 @@ class Sexp
     if @capture_name
       data[@capture_name] = matching_object
     end
+    
+    data
   end
 end

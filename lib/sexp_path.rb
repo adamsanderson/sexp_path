@@ -18,7 +18,7 @@ module Traverse
     
     self.each do |subset|
       case subset
-        when Sexp then subset.search_each(pattern, &block)
+        when Sexp then subset.search_each(pattern, data, &block)
       end
     end
   end
@@ -97,14 +97,19 @@ class SexpChildMatcher < SexpMatcher
   end
   
   def satisfy?(o, data={})
-    return nil unless child.satisfy?(o,data) || (o.respond_to?(:search_each) && o.search_each(child){ return true })
-    
-    capture_match o, data
-    data
+    if child.satisfy?(o,data)
+      capture_match o, data
+      data
+    elsif o.is_a? Sexp
+      o.search_each(child,data) do 
+        capture_match o, data
+        return data 
+      end
+    end
   end
   
   def inspect
-    "_(#{child.inspect})"
+    "child(#{child.inspect})"
   end
 end
 

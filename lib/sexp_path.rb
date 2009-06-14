@@ -4,9 +4,9 @@ require 'enumerator'
 require 'pp'
 
 module Traverse
-  def search(pattern)
+  def search(pattern, data={})
     collection = SexpCollection.new
-    search_each(pattern){|match, data| collection << match}
+    search_each(pattern,data){|match| collection << match}
     collection
   end
   alias_method :/, :search
@@ -15,7 +15,7 @@ module Traverse
     return false unless pattern.is_a? Sexp
     
     if pattern.satisfy?(self, data)
-      block.call(self, data)
+      block.call(SexpMatch.new(self, data))
     end
     
     self.each do |subset|
@@ -26,9 +26,21 @@ module Traverse
   end
 end
 
+class SexpMatch
+  attr_accessor :sexp, :data
+  def initialize(sexp, data)
+    @sexp = sexp
+    @data = data
+  end
+  
+  def [] key
+    data[key]
+  end
+end
+
 class SexpCollection < Array
   def search(pattern)
-    inject(SexpCollection.new){|collection, sexp| collection.concat sexp.search(pattern) }
+    inject(SexpCollection.new){|collection, match| collection.concat match.sexp.search(pattern, match.data) }
   end
   alias_method :/, :search
 end

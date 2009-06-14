@@ -22,28 +22,27 @@ class UseCaseTest < Test::Unit::TestCase
   end
   
   def test_finding_classes_and_methods
-    classes = @sexp / Q?{ t(:class) }
-    assert_equal 1, classes.length
-    example_test = classes.first
-    assert_equal :ExampleTest, example_test[1]
+    res = @sexp / Q?{ s(:class, atom % 'name', _, _) }
+    assert_equal 1, res.length
+    assert_equal :ExampleTest, res.first['name']
     
-    methods = example_test / Q?{ t(:defn) }
+    methods = res / Q?{ t(:defn) }
     assert_equal 5, methods.length
   end
   
   def test_finding_empty_test_methods
     empty_body = Q?{ s(:scope, s(:block, t(:args), s(:nil))) }
-    methods = @sexp / Q?{ s(:defn, m(/^test_.+/), empty_body ) }
-    assert_equal 1, methods.length
-    assert_equal :test_b, methods.first[1]
+    res = @sexp / Q?{ s(:defn, m(/^test_.+/) % 'name', empty_body ) }
+    assert_equal 1, res.length
+    assert_equal :test_b, res.first['name']
   end
   
   def test_finding_duplicate_test_names
-    methods = @sexp / Q?{ s(:defn, m(/^test_.+/), _ ) }
+    res = @sexp / Q?{ s(:defn, m(/^test_.+/) % 'name', _ ) }
     seen = Set.new()
     repeated = 0
-    methods.each do |m|
-      name = m[1]
+    res.each do |m|
+      name = m['name']
       repeated += 1 if seen.include? name
       seen << name
     end
@@ -52,13 +51,12 @@ class UseCaseTest < Test::Unit::TestCase
   end
   
   def test_rewriting_colon2s_oh_man_i_hate_those_in_most_cases_but_i_understand_why_they_are_there
-    colon2 = Q?{ s(:colon2, s(:const, atom), atom) }
+    colon2 = Q?{ s(:colon2, s(:const, atom % 'const'), atom % 'scope') }
     
     # Hacky, obviously could be done better
     while (results = (@sexp / colon2)) && !results.empty?
       results.each do |result|
-        scope = result.flatten[-2..-1]
-        result.replace(s(:const, "#{scope.join '::'}"))
+        result.sexp.replace(s(:const, result['scope'].to_s+'::'+result['const'].to_s ))
       end
     end
     

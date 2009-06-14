@@ -159,7 +159,7 @@ class SexpMatchingPathTest < Test::Unit::TestCase
     collection = @ast_sexp / Q?{s(:defn, atom, _)} / Q?{s(atom, :a, :b)}
     assert_equal SexpCollection, collection.class
     assert_equal 2, collection.length
-    assert_equal [s(:add, :a, :b), s(:sub, :a, :b)], collection
+    assert_equal [s(:add, :a, :b), s(:sub, :a, :b)], collection.map{|m| m.sexp}
   end
   
   def test_sexp_type_matching
@@ -183,7 +183,7 @@ class SexpMatchingPathTest < Test::Unit::TestCase
   private
   def assert_search_count(sexp, example, count, message)
     i = 0
-    sexp.search_each(example){|match, data| i += 1}
+    sexp.search_each(example){|match| i += 1}
     assert_equal count, i, message + "\nSearching for: #{example.inspect}\nIn: #{sexp.inspect}"
   end
 end

@@ -56,7 +56,7 @@ class UseCaseTest < Test::Unit::TestCase
     # Hacky, obviously could be done better
     while (results = (@sexp / colon2)) && !results.empty?
       results.each do |result|
-        result.sexp.replace(s(:const, result['scope'].to_s+'::'+result['const'].to_s ))
+        result.sexp.replace(s(:const, result['const'].to_s+'::'+result['scope'].to_s ))
       end
     end
     

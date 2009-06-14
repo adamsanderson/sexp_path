@@ -26,21 +26,17 @@ module Traverse
   end
 end
 
-class SexpMatch
-  attr_accessor :sexp, :data
-  def initialize(sexp, data)
+class SexpMatch < Hash
+  attr_accessor :sexp
+  def initialize(sexp, data={})
     @sexp = sexp
-    @data = data
-  end
-  
-  def [] key
-    data[key]
+    merge! data
   end
 end
 
 class SexpCollection < Array
   def search(pattern)
-    inject(SexpCollection.new){|collection, match| collection.concat match.sexp.search(pattern, match.data) }
+    inject(SexpCollection.new){|collection, match| collection.concat match.sexp.search(pattern, match) }
   end
   alias_method :/, :search
 end

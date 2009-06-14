@@ -53,10 +53,10 @@ class UseCaseTest < Test::Unit::TestCase
   def test_rewriting_colon2s_oh_man_i_hate_those_in_most_cases_but_i_understand_why_they_are_there
     colon2 = Q?{ s(:colon2, s(:const, atom % 'const'), atom % 'scope') }
     
-    # Hacky, obviously could be done better
+    # Hacky, could be done better
     while (results = (@sexp / colon2)) && !results.empty?
       results.each do |result|
-        result.sexp.replace(s(:const, result['const'].to_s+'::'+result['scope'].to_s ))
+        result.sexp.replace(s(:const, result.values_at('const','scope').join('::') ))
       end
     end
     

@@ -1,7 +1,5 @@
 require 'rubygems'
 require 'sexp_processor'
-require 'enumerator'
-require 'pp'
 
 module Traverse
   def search(pattern, data={})
@@ -209,7 +207,7 @@ class SexpInclude < SexpMatcher
   end
 end
 
-class SexpQuery
+class SexpQueryBuilder
   WILD = SexpWildCard.new()
   
   class << self
@@ -259,22 +257,11 @@ class SexpQuery
 end
 
 def Q?(&block)
-  SexpQuery.do(&block)
+  SexpQueryBuilder.do(&block)
 end
 
 class Sexp
   include Traverse
-  
-  # Slight modification of Sexp equality so that we will consider anything that is
-  # an Sexp, or a descendant of a sexp.
-  def ==(obj)
-    if obj.is_a?(Sexp) then
-      super
-    else
-      false
-    end
-  end
-  
   
   def satisfy?(o, data={})
     return false unless o.is_a? Sexp

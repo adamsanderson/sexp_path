@@ -52,8 +52,11 @@ class SexpAnyMatcher < SexpMatcher
     @options = options
   end
   
-  def satisfy?(o)
-    options.any?{|exp| exp.is_a?(Sexp) ? exp.satisfy?(o) : exp == o}
+  def satisfy?(o, data={})
+    return nil unless options.any?{|exp| exp.is_a?(Sexp) ? exp.satisfy?(o, data) : exp == o}
+    
+    capture_match o, data
+    data
   end
   
   def inspect
@@ -67,8 +70,11 @@ class SexpAllMatcher < SexpMatcher
     @options = options
   end
   
-  def satisfy?(o)
-    options.all?{|exp| exp.is_a?(Sexp) ? exp.satisfy?(o) : exp == o}
+  def satisfy?(o, data={})
+    return nil unless options.all?{|exp| exp.is_a?(Sexp) ? exp.satisfy?(o, data) : exp == o}
+    
+    capture_match o, data
+    data
   end
   
   def inspect
@@ -82,8 +88,11 @@ class SexpChildMatcher < SexpMatcher
     @child = child
   end
   
-  def satisfy?(o)
-    child.satisfy?(o) || (o.respond_to?(:search_each) && o.search_each(child){ return true })
+  def satisfy?(o, data={})
+    return nil unless child.satisfy?(o,data) || (o.respond_to?(:search_each) && o.search_each(child){ return true })
+    
+    capture_match o, data
+    data
   end
   
   def inspect
@@ -97,8 +106,11 @@ class SexpBlockMatch < SexpMatcher
     @exp = block
   end
   
-  def satisfy?(o)
-    !!@exp[o]
+  def satisfy?(o, data={})
+    return nil unless @exp[o]
+    
+    capture_match o, data
+    data
   end
   
   def inspect
@@ -107,8 +119,11 @@ class SexpBlockMatch < SexpMatcher
 end
 
 class SexpAtom < SexpMatcher
-  def satisfy?(o)
-    !o.is_a? Sexp
+  def satisfy?(o, data={})
+    return nil if o.is_a? Sexp
+    
+    capture_match o, data
+    data
   end
 
   def inspect
@@ -122,8 +137,11 @@ class SexpPatternMatcher < SexpMatcher
     @pattern = pattern
   end
   
-  def satisfy?(o)
-    !o.is_a?(Sexp) && o.to_s =~ pattern
+  def satisfy?(o, data={})
+    return nil unless !o.is_a?(Sexp) && o.to_s =~ pattern
+
+    capture_match o, data
+    data
   end
 
   def inspect
@@ -137,8 +155,11 @@ class SexpTypeMatcher < SexpMatcher
     @sexp_type = type
   end
   
-  def satisfy?(o)
-    o.is_a?(Sexp) && o.sexp_type == sexp_type
+  def satisfy?(o, data={})
+    return nil unless o.is_a?(Sexp) && o.sexp_type == sexp_type
+    
+    capture_match o, data
+    data
   end
 
   def inspect
@@ -147,8 +168,9 @@ class SexpTypeMatcher < SexpMatcher
 end
 
 class SexpWildCard < SexpMatcher
-  def satisfy?(o)
-    true
+  def satisfy?(o, data={})
+    capture_match o, data
+    data
   end
   
   def inspect
@@ -163,12 +185,13 @@ class SexpInclude < SexpMatcher
     @value = value
   end
   
-  def satisfy?(o)
-    if o.respond_to? :include?
-      return o.any?{|c| value.is_a?(Sexp) ? value.satisfy?(c) : value == c}
-    else
-      value.satisfy? c
+  def satisfy?(o, data={})
+    if o.is_a? Sexp
+      return nil unless o.any?{|c| value.is_a?(Sexp) ? value.satisfy?(c, data) : value == c}
     end
+    
+    capture_match o, data
+    data
   end
   
   def inspect
@@ -242,23 +265,13 @@ class Sexp
     end
   end
   
-  def satisfy?(o)
-    return nil unless o.is_a? Sexp
-    return nil unless length == o.length
-    data = {}
-    each_with_index do |c,i|
-      if c.is_a?(Sexp)
-        if res = c.satisfy?( o[i] )
-          data.merge!({}) # TODO: merge sub results
-        else
-          return nil
-        end
-      else
-        return nil if c != o[i]
-      end
-    end
-    
-    capture_match data, o
+  
+  def satisfy?(o, data={})
+    return false unless o.is_a? Sexp
+    return false unless length == o.length
+    each_with_index{|c,i| return false unless c.is_a?(Sexp) ? c.satisfy?( o[i], data ) : c == o[i] }
+
+    capture_match(o, data)
     data
   end
   
@@ -268,8 +281,8 @@ class Sexp
   end
   alias_method :%, :capture_as
   
-  private
-  def capture_match(data, matching_object)
+  private  
+  def capture_match(matching_object, data)
     if @capture_name
       data[@capture_name] = matching_object
     end

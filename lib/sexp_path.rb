@@ -243,10 +243,23 @@ class Sexp
   end
   
   def satisfy?(o)
-    return false unless o.is_a? Sexp
-    return false unless length == o.length
-    each_with_index{|c,i| return false unless c.is_a?(Sexp) ? c.satisfy?( o[i] ) : c == o[i] }
-    {}
+    return nil unless o.is_a? Sexp
+    return nil unless length == o.length
+    data = {}
+    each_with_index do |c,i|
+      if c.is_a?(Sexp)
+        if res = c.satisfy?( o[i] )
+          data.merge!({}) # TODO: merge sub results
+        else
+          return nil
+        end
+      else
+        return nil if c != o[i]
+      end
+    end
+    
+    capture_match data, o
+    data
   end
   
   def capture_as(name)
@@ -255,4 +268,10 @@ class Sexp
   end
   alias_method :%, :capture_as
   
+  private
+  def capture_match(data, matching_object)
+    if @capture_name
+      data[@capture_name] = matching_object
+    end
+  end
 end

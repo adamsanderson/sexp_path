@@ -207,9 +207,7 @@ class SexpInclude < SexpMatcher
   end
 end
 
-class SexpQueryBuilder
-  WILD = SexpWildCard.new()
-  
+class SexpQueryBuilder  
   class << self
     def do(&block)
       instance_eval(&block)
@@ -220,7 +218,7 @@ class SexpQueryBuilder
     end
   
     def wild()
-      WILD
+      SexpWildCard.new
     end
     alias_method :_, :wild
     

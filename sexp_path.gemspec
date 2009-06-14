@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{sexp_path}
-  s.version = "0.1.0"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Adam Sanderson"]
-  s.date = %q{2009-06-08}
+  s.date = %q{2009-06-14}
   s.description = %q{      Allows you to do example based pattern matching and queries against S Expressions (sexp).
 }
   s.email = %q{netghost@gmail.com}
@@ -15,7 +15,8 @@ Gem::Specification.new do |s|
     "VERSION.yml",
     "lib/sexp_path.rb",
     "test/sample.rb",
-    "test/sexp_path_test.rb",
+    "test/sexp_path_capture_test.rb",
+    "test/sexp_path_matching_test.rb",
     "test/use_case_test.rb"
   ]
   s.has_rdoc = true
@@ -25,7 +26,8 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.2}
   s.summary = %q{Pattern matching for S Expressions (sexp).}
   s.test_files = [
-    "test/sexp_path_test.rb",
+    "test/sexp_path_capture_test.rb",
+    "test/sexp_path_matching_test.rb",
     "test/use_case_test.rb"
   ]
 

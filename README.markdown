@@ -147,4 +147,12 @@ Project Information
 --------------------
 Hop in and fork it or add some issues over at [GitHub](http://github.com/adamsanderson/sexp_path).
 
-    Adam Sanderson
+Ideas for Hacking on SexpPath:
+  
+  * More examples
+  * Add new matchers
+  * Connivence matchers, for instance canned matchers for matching ruby classes, methods, etc
+
+I'd love to see what people do with this library, let me know if you find it useful.
+
+    Adam Sanderson, netghost@gmail.com

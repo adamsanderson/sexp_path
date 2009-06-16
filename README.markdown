@@ -1,0 +1,150 @@
+SexpPath
+========
+
+Structural pattern matching against S-Expressions.
+
+SexpPath allows you to define patterns that can be matched against S-Expressions.
+SexpPath draws inspiration from Regular Expressions, XPath, and CSS Selectors.
+
+Installation
+------------
+
+SexpPath is distributed as a ruby gem:
+    
+    gem install sexp_path
+
+Notation
+--------
+
+In ruby you're most likely to come across S-Expressions when dealing with
+ParseTree's representation of the abstract syntax tree. An S-Expression is
+just a set of nested lists.  The SexpProcessor library displays them like this:
+
+    s(:a, :b, 
+      s(:c)
+    )
+
+Where that means that there is a list containing `:a`, `:b`, and then another list which
+contains `:c`.  We will refer to `:a`,`:b`, and `:c` as atoms, while 
+`s( something )` is an S-Expression or Sexp.
+
+General Syntax
+--------------
+
+SexpPath is an internal ruby DSL, which means a SexpPath query is valid ruby code.  
+SexpPath queries are built with the SexpQueryBuilder through the Q? convenience
+method:
+  
+    Q?{ s(:a, :b, :c)}    # Matches s(:a, :b, :c)
+  
+This will match the S-Expression `s(:a, :b, :c)`.  If you want to match something 
+more complicated, you will probably want to employ one of the many matchers built
+into SexpPath.
+    
+**Wild Card**: Matches anything.
+
+    _  => s(), :a, or s(:cat)
+    
+**Atom**: Matches any atom (or symbol).
+
+    atom => :a, :b, or :cat
+
+**Pattern**: Matches any atom that matches the given string or regular expression.
+
+    m('cat') => :cat
+    m(/rat/) => :rat, :brat, or :rate
+    m(/^test_/) => :test_sexp_path
+    
+**Includes**: Matches any S-Expression that includes the sub expression.
+
+    include(:a) => s(:a), s(:a, :b), or s(:cat, :a, :b)
+    include( s(:cat) ) => s(:pet, s(:cat))
+    
+**Child**: Matches any S-Expression that has the sub expression as a child.
+
+    child( s(:a) ) => s(:b, s(:a)) or even s(s(s(s(s( s(:a))))))
+
+**Type**: The sexp type is considered to be the first atom.  This matches any expression that has the given type.
+
+    type(:a) => s(:a), s(:a, :b), or s(:a, :b, s(:c))
+    
+**Any**: Matches any sub expression
+
+    any( s(:a), s(:b) ) => s(:a) or s(:b)
+    any( s(:a), s(atom, :b) ) => s(:a), s(:a, :b), or s(:cat, :b)
+
+**All**: Matches anything that satisfies all the sub expressions
+
+    all( s(:a, atom), s(atom, :b) ) => s(:a,:b)
+    
+Searching
+---------
+You may use any SexpPath to search an S-Expression.  SexpPath defines the `/` operator as search,
+so to search `s( s(:a) )`  for `s(:a)` you may just do:
+    
+    s( s(:a) ) / Q?{ s(:a) }
+    
+This will return a collection with just one result which is `s(:a)`.  You could also do something
+more interesting:
+
+    s( s(:a), s(:b) ) / Q?{ s(atom) }
+    
+This will return two matches which are `s(:a)` and `s(:b)`.  You can also chain searches, so this
+works just fine as well:
+
+    sexp = s(:class, :Calculator,
+      s(:defn, :add),
+      s(:defn, :sub)
+    ) 
+    
+    sexp / Q?{ s(:class, atom, _) } / Q?{ s(:defn, _) }
+    
+In this case you would get back `s(:defn, :add)` and `s(:defn, :sub)`.
+
+Capturing
+---------
+It is useful to also capture results from your queries.  So using
+the same Sexp from above we could modify our query to actually capture some names.
+Capturing is done by using `%` operator followed by the name you would like the value
+to be captured as.
+
+    sexp / Q?{ s(:class, atom % 'class_name', _) } / Q?{ s(:defn, _ % 'method_name') }
+  
+The results will now capture `:Calculator` in `class_name`, and then `:add` and `:sub`
+in `method_name`.
+
+Examples
+--------
+
+Here is an example of using SexpPath to grab all the classes and their methods from
+a file:
+  
+    require 'rubygems'
+    require 'sexp_path'
+    require 'parse_tree'
+  
+    path = ARGV.shift
+    code = File.read(path)
+    sexp = Sexp.from_array(ParseTree.new.parse_tree_for_string(code, path))
+
+    class_query = Q?{ s(:class, atom % 'class_name', _, _) }
+    method_query = Q?{ s(:defn, atom % 'method_name', _ ) }
+
+    results = sexp / class_query / method_query
+
+    puts path
+    puts "-" * 80
+
+    results.each do |sexp_result|
+      class_name = sexp_result['class_name']
+      method_name = sexp_result['method_name']
+      puts "#{class_name}##{method_name}"
+    end
+  
+Neat huh?  Check the `examples` folder for some more little apps.
+
+Project Information
+--------------------
+Hop in and fork it or add some issue over at: http://github.com/adamsanderson/sexp_path .
+
+    Adam Sanderson

@@ -11,7 +11,7 @@ Installation
 
 SexpPath is distributed as a ruby gem:
     
-    gem install sexp_path
+    gem install adamsanderson-sexp_path
 
 Notation
 --------
@@ -145,6 +145,6 @@ Neat huh?  Check the `examples` folder for some more little apps.
 
 Project Information
 --------------------
-Hop in and fork it or add some issue over at: http://github.com/adamsanderson/sexp_path .
+Hop in and fork it or add some issues over at [GitHub](http://github.com/adamsanderson/sexp_path).
 
     Adam Sanderson

@@ -37,7 +37,7 @@ class SexpMatchingPathTest < Test::Unit::TestCase
   end
   
   def test_equality_of_atom
-    a = SexpAtom.new
+    a = SexpPath::SexpAtom.new
     assert a.satisfy?(:a),  "Should match a symbol"
     assert a.satisfy?(1),   "Should match a number"
     assert a.satisfy?(nil), "Should match nil"
@@ -64,7 +64,7 @@ class SexpMatchingPathTest < Test::Unit::TestCase
   end
   
   def test_equality_of_wildacard
-    w = SexpWildCard.new
+    w = SexpPath::SexpWildCard.new
     assert w.satisfy?(:a  ),  "Should match a symbol"
     assert w.satisfy?(1   ),   "Should match a number"
     assert w.satisfy?(nil ), "Should match nil"
@@ -152,12 +152,12 @@ class SexpMatchingPathTest < Test::Unit::TestCase
   
   def test_search_collection
     # test method
-    assert_equal SexpCollection, @ast_sexp.search( s(:sub, :a, :b)).class
+    assert_equal SexpPath::SexpCollection, @ast_sexp.search( s(:sub, :a, :b)).class
     # test binary operator
-    assert_equal SexpCollection, (@ast_sexp / s(:sub, :a, :b)).class
+    assert_equal SexpPath::SexpCollection, (@ast_sexp / s(:sub, :a, :b)).class
     # test sub searches
     collection = @ast_sexp / Q?{s(:defn, atom, _)} / Q?{s(atom, :a, :b)}
-    assert_equal SexpCollection, collection.class
+    assert_equal SexpPath::SexpCollection, collection.class
     assert_equal 2, collection.length
     assert_equal [s(:add, :a, :b), s(:sub, :a, :b)], collection.map{|m| m.sexp}
   end
@@ -171,7 +171,7 @@ class SexpMatchingPathTest < Test::Unit::TestCase
   
   # Still not sure if I like this
   def test_block_matching
-    sb = SexpBlockMatch
+    sb = SexpPath::SexpBlockMatch
     
     assert sb.new{|o| o == s(:a)}.satisfy?(s(:a)), "Should match simple equality"
     assert sb.new{|o| o.length == 1}.satisfy?(s(:a)), "Should match length check"

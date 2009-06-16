@@ -1,47 +1,47 @@
 module SexpPath
-  class SexpQueryBuilder  
+  class SexpQueryBuilder    
     class << self
       def do(&block)
         instance_eval(&block)
       end
   
       def s(*args)
-        SexpMatcher.new(*args)
+        SexpPath::Matcher::Base.new(*args)
       end
   
       def wild()
-        SexpWildCard.new
+        SexpPath::Matcher::Wild.new
       end
       alias_method :_, :wild
     
       def include(child)
-        SexpInclude.new(child)
+        SexpPath::Matcher::Include.new(child)
       end
   
       def atom(*args)
-        SexpAtom.new
+        SexpPath::Matcher::Atom.new
       end
     
       def any(*args)
-        SexpAnyMatcher.new(*args)
+        SexpPath::Matcher::Any.new(*args)
       end
     
       def all(*args)
-        SexpAllMatcher.new(*args)
+        SexpPath::Matcher::All.new(*args)
       end
     
       def child(child)
-        SexpChildMatcher.new(child)
+        SexpPath::Matcher::Child.new(child)
       end
     
       def t(name)
-        SexpTypeMatcher.new(name)
+        SexpPath::Matcher::Type.new(name)
       end
     
       def m(* patterns)
         patterns = patterns.map{|p| p.is_a?(Regexp) ? p : Regexp.new("\\A"+Regexp.escape(p.to_s)+"\\Z")}
         regexp = Regexp.union(*patterns)
-        SexpPatternMatcher.new(regexp)
+        SexpPath::Matcher::Pattern.new(regexp)
       end
     end
   end

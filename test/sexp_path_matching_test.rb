@@ -37,7 +37,7 @@ class SexpMatchingPathTest < Test::Unit::TestCase
   end
   
   def test_equality_of_atom
-    a = SexpPath::SexpAtom.new
+    a = SexpPath::Matcher::Atom.new
     assert a.satisfy?(:a),  "Should match a symbol"
     assert a.satisfy?(1),   "Should match a number"
     assert a.satisfy?(nil), "Should match nil"
@@ -64,7 +64,7 @@ class SexpMatchingPathTest < Test::Unit::TestCase
   end
   
   def test_equality_of_wildacard
-    w = SexpPath::SexpWildCard.new
+    w = SexpPath::Matcher::Wild.new
     assert w.satisfy?(:a  ),  "Should match a symbol"
     assert w.satisfy?(1   ),   "Should match a number"
     assert w.satisfy?(nil ), "Should match nil"
@@ -171,7 +171,7 @@ class SexpMatchingPathTest < Test::Unit::TestCase
   
   # Still not sure if I like this
   def test_block_matching
-    sb = SexpPath::SexpBlockMatch
+    sb = SexpPath::Matcher::Block
     
     assert sb.new{|o| o == s(:a)}.satisfy?(s(:a)), "Should match simple equality"
     assert sb.new{|o| o.length == 1}.satisfy?(s(:a)), "Should match length check"

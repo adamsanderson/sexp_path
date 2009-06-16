@@ -6,13 +6,18 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Adam Sanderson"]
-  s.date = %q{2009-06-14}
+  s.date = %q{2009-06-15}
   s.description = %q{      Allows you to do example based pattern matching and queries against S Expressions (sexp).
 }
   s.email = %q{netghost@gmail.com}
+  s.extra_rdoc_files = [
+    "README.markdown"
+  ]
   s.files = [
+    "README.markdown",
     "Rakefile",
     "VERSION.yml",
+    "examples/print_methods.rb",
     "lib/sexp_path.rb",
     "test/sample.rb",
     "test/sexp_path_capture_test.rb",
@@ -24,7 +29,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.2}
-  s.summary = %q{Pattern matching for S Expressions (sexp).}
+  s.summary = %q{Pattern matching for S-Expressions (sexp).}
   s.test_files = [
     "test/sexp_path_capture_test.rb",
     "test/sexp_path_matching_test.rb",

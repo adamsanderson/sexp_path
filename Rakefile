@@ -7,14 +7,14 @@ begin
   
   Jeweler::Tasks.new do |s|
     s.name = "sexp_path"
-    s.summary = "Pattern matching for S Expressions (sexp)."
+    s.summary = "Pattern matching for S-Expressions (sexp)."
     s.description = <<-DESC
       Allows you to do example based pattern matching and queries against S Expressions (sexp).
     DESC
     s.email = "netghost@gmail.com"
     s.homepage = "http://github.com/adamsanderson/sexp_path"
     s.authors = ["Adam Sanderson"]
-    s.files = FileList["[A-Z]*", "{bin,lib,test}/**/*"]
+    s.files = FileList["[A-Z]*", "{bin,lib,test,examples}/**/*"]
     
     s.add_dependency 'sexp_processor', '~> 3.0'
     

@@ -1,12 +1,20 @@
 module SexpPath
   module Traverse
+    # Searches for the +pattern+ returning a SexpCollection containing 
+    # a SexpResult for each match.
+    #
+    # Example:
+    #   s(:a, s(:b)) / Q{ s(:b) } => [s(:b)]
     def search(pattern, data={})
       collection = SexpCollection.new
       search_each(pattern,data){|match| collection << match}
       collection
     end
     alias_method :/, :search
-
+    
+    # Searches for the +pattern+ yielding a SexpResult
+    # for each match.
+    #
     def search_each(pattern, data={}, &block)
       return false unless pattern.is_a? Sexp
   
@@ -20,15 +28,9 @@ module SexpPath
         end
       end
     end
-  
-    def satisfy?(o, data={})
-      return false unless o.is_a? Sexp
-      return false unless length == o.length
-      each_with_index{|c,i| return false unless c.is_a?(Sexp) ? c.satisfy?( o[i], data ) : c == o[i] }
-
-      capture_match(o, data)
-    end
-
+    
+    # Sets a named capture for the Matcher.  If a SexpResult is returned
+    # any named captures will be available it.
     def capture_as(name)
       @capture_name = name
       self

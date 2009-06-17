@@ -27,6 +27,11 @@ rescue LoadError
   puts "Jeweler not available. Install it for jeweler-related tasks with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
 end
 
+Rake::RDocTask.new do |t|
+  t.main = "README.rdoc"
+  t.rdoc_files.include("README.rdoc", "lib/**/*.rb")
+end
+
 Rake::TestTask.new do |t|
   t.libs << 'lib'
   t.pattern = 'test/**/*_test.rb'

@@ -1,20 +1,17 @@
-SexpPath
-========
+= SexpPath
 
 Structural pattern matching against S-Expressions.
 
 SexpPath allows you to define patterns that can be matched against S-Expressions.
 SexpPath draws inspiration from Regular Expressions, XPath, and CSS Selectors.
 
-Installation
-------------
+== Installation
 
 SexpPath is distributed as a ruby gem:
     
     gem install adamsanderson-sexp_path
 
-Notation
---------
+== Notation
 
 In ruby you're most likely to come across S-Expressions when dealing with
 ParseTree's representation of the abstract syntax tree. An S-Expression is
@@ -28,8 +25,7 @@ Where that means that there is a list containing `:a`, `:b`, and then another li
 contains `:c`.  We will refer to `:a`,`:b`, and `:c` as atoms, while 
 `s( something )` is an S-Expression or Sexp.
 
-General Syntax
---------------
+== General Syntax
 
 SexpPath is an internal ruby DSL, which means a SexpPath query is valid ruby code.  
 SexpPath queries are built with the SexpQueryBuilder through the Q? convenience
@@ -41,44 +37,44 @@ This will match the S-Expression `s(:a, :b, :c)`.  If you want to match somethin
 more complicated, you will probably want to employ one of the many matchers built
 into SexpPath.
     
-**Wild Card**: Matches anything.
+[Wild Card] Matches anything.
 
     _  => s(), :a, or s(:cat)
     
-**Atom**: Matches any atom (or symbol).
+[Atom] Matches any atom (or symbol).
 
     atom => :a, :b, or :cat
 
-**Pattern**: Matches any atom that matches the given string or regular expression.
+[Pattern] Matches any atom that matches the given string or regular expression.
 
     m('cat') => :cat
     m(/rat/) => :rat, :brat, or :rate
     m(/^test_/) => :test_sexp_path
     
-**Includes**: Matches any S-Expression that includes the sub expression.
+[Includes] Matches any S-Expression that includes the sub expression.
 
     include(:a) => s(:a), s(:a, :b), or s(:cat, :a, :b)
     include( s(:cat) ) => s(:pet, s(:cat))
     
-**Child**: Matches any S-Expression that has the sub expression as a child.
+[Child] Matches any S-Expression that has the sub expression as a child.
 
     child( s(:a) ) => s(:b, s(:a)) or even s(s(s(s(s( s(:a))))))
 
-**Type**: The sexp type is considered to be the first atom.  This matches any expression that has the given type.
+[Type] The sexp type is considered to be the first atom.  This matches any expression that has the given type.
 
     type(:a) => s(:a), s(:a, :b), or s(:a, :b, s(:c))
     
-**Any**: Matches any sub expression
+[Any] Matches any sub expression
 
     any( s(:a), s(:b) ) => s(:a) or s(:b)
     any( s(:a), s(atom, :b) ) => s(:a), s(:a, :b), or s(:cat, :b)
 
-**All**: Matches anything that satisfies all the sub expressions
+[All] Matches anything that satisfies all the sub expressions
 
     all( s(:a, atom), s(atom, :b) ) => s(:a,:b)
     
-Searching
----------
+== Searching
+
 You may use any SexpPath to search an S-Expression.  SexpPath defines the `/` operator as search,
 so to search `s( s(:a) )`  for `s(:a)` you may just do:
     
@@ -101,8 +97,8 @@ works just fine as well:
     
 In this case you would get back `s(:defn, :add)` and `s(:defn, :sub)`.
 
-Capturing
----------
+== Capturing
+
 It is useful to also capture results from your queries.  So using
 the same Sexp from above we could modify our query to actually capture some names.
 Capturing is done by using `%` operator followed by the name you would like the value
@@ -113,8 +109,7 @@ to be captured as.
 The results will now capture `:Calculator` in `class_name`, and then `:add` and `:sub`
 in `method_name`.
 
-Examples
---------
+== Examples
 
 Here is an example of using SexpPath to grab all the classes and their methods from
 a file:
@@ -143,9 +138,10 @@ a file:
   
 Neat huh?  Check the `examples` folder for some more little apps.
 
-Project Information
---------------------
-Hop in and fork it or add some issues over at [GitHub](http://github.com/adamsanderson/sexp_path).
+== Project Information
+
+Hop in and fork it or add some issues over at GitHub: 
+  http://github.com/adamsanderson/sexp_path
 
 Ideas for Hacking on SexpPath:
   

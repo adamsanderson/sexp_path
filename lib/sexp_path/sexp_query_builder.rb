@@ -5,7 +5,7 @@ module SexpPath
   # Typically, one access the SexpQueryBuilder through the helper method
   # Q? which accepts a block, and will return a SexpPath matcher.
   #
-  # For example here is a SexpPath query that looks for +s(:a)+
+  # For example here is a SexpPath query that looks for s(:a):
   #
   #   query = Q?{ s(:a) }
   # 
@@ -23,6 +23,12 @@ module SexpPath
   #
   class SexpQueryBuilder    
     class << self
+      
+      # This is the longhand method for create a SexpPath query, normally
+      # one would use Q?{ ... }, however it is also possible to do:
+      # 
+      #   SexpPath::SexpQueryBuilder.do{ s() }
+      #
       def do(&block)
         instance_eval(&block)
       end

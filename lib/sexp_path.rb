@@ -1,13 +1,14 @@
-# Dependencies
 require 'rubygems'
 require 'sexp_processor'
 
-# Matchers
 module SexpPath
+  
+  # SexpPath Matchers are used to build SexpPath queries.
+  #
+  # See also: SexpQueryBuilder
   module Matcher  
   end
 end
-
 
 # Query Support
 require 'sexp_path/traverse'
@@ -28,7 +29,7 @@ require 'sexp_path/matcher/wild'
 require 'sexp_path/matcher/include'
 
 
-# Pattern building helper
+# Pattern building helper, see SexpQueryBuilder
 def Q?(&block)
   SexpPath::SexpQueryBuilder.do(&block)
 end

@@ -11,7 +11,6 @@ end
 
 # Query Support
 require 'sexp_path/traverse'
-require 'sexp_path/matchers'
 require 'sexp_path/sexp_query_builder'
 require 'sexp_path/sexp_result'
 require 'sexp_path/sexp_collection'

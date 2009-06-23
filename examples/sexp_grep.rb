@@ -19,6 +19,7 @@ if paths.empty? || !pattern
 end
 
 begin
+  # Generate the pattern, we use a little instance_eval trickery here. 
   pattern = SexpPath::SexpQueryBuilder.instance_eval(pattern)
 rescue Exception=>ex
   puts "Invalid Pattern: '#{pattern}'"
@@ -28,11 +29,16 @@ rescue Exception=>ex
   exit 1
 end
 
+# For each path the user defined, search for the SexpPath pattern
 paths.each do |path|
+  # Read the ruby from a file
   code = File.read(path)
+  
+  # Parse it with ParseTree
   sexp = Sexp.from_array(ParseTree.new.parse_tree_for_string(code, path))
   found = false
   
+  # Search it with the given pattern, printing any results
   sexp.search_each(pattern) do |match|
     if !found
       puts "\n** #{path} **"

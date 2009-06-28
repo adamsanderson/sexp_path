@@ -28,6 +28,8 @@ require 'sexp_path/matcher/type'
 require 'sexp_path/matcher/wild'
 require 'sexp_path/matcher/include'
 
+# Support
+require 'sexp_path/line_numbering_processor'
 
 # Pattern building helper, see SexpQueryBuilder
 def Q?(&block)

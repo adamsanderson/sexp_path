@@ -30,12 +30,9 @@ rescue Exception=>ex
 end
 
 # For each path the user defined, search for the SexpPath pattern
-paths.each do |path|
-  # Read the ruby from a file
-  code = File.read(path)
-  
-  # Parse it with ParseTree
-  sexp = Sexp.from_array(ParseTree.new.parse_tree_for_string(code, path))
+paths.each do |path|  
+  # Parse it with ParseTree, and append line numbers
+  sexp = sexp = LineNumberingProcessor.process_file(path)
   found = false
   
   # Search it with the given pattern, printing any results
@@ -44,6 +41,6 @@ paths.each do |path|
       puts "\n** #{path} **"
       found = true
     end
-    puts "\n#{match.sexp.inspect}"
+    puts "\n #{match.sexp.line} #{match.sexp.inspect}"
   end
 end

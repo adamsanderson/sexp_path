@@ -10,26 +10,28 @@ module SexpPath
   end
 end
 
-# Query Support
-require 'sexp_path/traverse'
-require 'sexp_path/sexp_query_builder'
-require 'sexp_path/sexp_result'
-require 'sexp_path/sexp_collection'
-
-# Matchers
-require 'sexp_path/matcher/base'
-require 'sexp_path/matcher/any'
-require 'sexp_path/matcher/all'
-require 'sexp_path/matcher/child'
-require 'sexp_path/matcher/block'
-require 'sexp_path/matcher/atom'
-require 'sexp_path/matcher/pattern'
-require 'sexp_path/matcher/type'
-require 'sexp_path/matcher/wild'
-require 'sexp_path/matcher/include'
-
-# Support
-require 'sexp_path/line_numbering_processor'
+sexp_path_root = File.dirname(__FILE__)+'/sexp_path/'
+%w[
+  traverse 
+  sexp_query_builder
+  sexp_result
+  sexp_collection
+  line_numbering_processor
+  
+  matcher/base
+  matcher/any
+  matcher/all
+  matcher/child
+  matcher/block
+  matcher/atom
+  matcher/pattern
+  matcher/type
+  matcher/wild
+  matcher/include
+  
+].each do |path|
+  require sexp_path_root+path
+end
 
 # Pattern building helper, see SexpQueryBuilder
 def Q?(&block)

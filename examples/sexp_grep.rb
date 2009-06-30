@@ -38,9 +38,9 @@ paths.each do |path|
   # Search it with the given pattern, printing any results
   sexp.search_each(pattern) do |match|
     if !found
-      puts "\n** #{path} **"
+      puts path
       found = true
     end
-    puts "\n #{match.sexp.line} #{match.sexp.inspect}"
+    puts "%4i: %s" % [match.sexp.line, match.sexp.inspect]
   end
 end

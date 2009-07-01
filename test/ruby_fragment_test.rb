@@ -6,7 +6,7 @@ class RubyFragmentTest < Test::Unit::TestCase
     assert_parses_ruby_strictly '1',            "Should handle simple literals"
     assert_parses_ruby_strictly '1+2',          "Should handle simple expressions"
     assert_parses_ruby_strictly '[1,a,3,:a]',   "Should handle arrays, and various types"
-    
+    assert_parses_ruby_strictly 'def cake; 1; end', "Should method definitions"
   end
   
   private

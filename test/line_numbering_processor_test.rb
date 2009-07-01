@@ -8,7 +8,7 @@ class LineNumberingProcessorTest < Test::Unit::TestCase
   end
   
   def test_processing_a_file_fills_in_all_the_line_numbers
-    sexp = LineNumberingProcessor.process_file(@path)
+    sexp = LineNumberingProcessor.rewrite_file(@path)
     assert !sexp.empty?
     sexp.search_each(Q?{_}) do |s| 
       assert !sexp.line.nil?, "Expected a line number for: #{s.sexp.inspect}"
@@ -18,7 +18,7 @@ class LineNumberingProcessorTest < Test::Unit::TestCase
   
   # This test may break if sample.rb changes
   def test_finding_known_lines
-    sexp = LineNumberingProcessor.process_file(@path)
+    sexp = LineNumberingProcessor.rewrite_file(@path)
     lines = open(@path,'r'){|io| io.readlines}
     
     assert_line_numbers_equal(

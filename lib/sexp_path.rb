@@ -16,6 +16,7 @@ sexp_path_root = File.dirname(__FILE__)+'/sexp_path/'
   sexp_query_builder
   sexp_result
   sexp_collection
+  
   line_numbering_processor
   
   matcher/base
@@ -28,6 +29,9 @@ sexp_path_root = File.dirname(__FILE__)+'/sexp_path/'
   matcher/type
   matcher/wild
   matcher/include
+  
+  ruby_query_builder
+  matcher/ruby_fragment
   
 ].each do |path|
   require sexp_path_root+path

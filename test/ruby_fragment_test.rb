@@ -29,7 +29,7 @@ class RubyFragmentTest < Test::Unit::TestCase
     assert !"1 + ((ONE-TWO))".match(regexp)
     assert !"1 + (())".match(regexp)
   end
-  
+    
   def test_capturing_groups
     assert_captures '1+2', '1 + ((INTEGER))', 'integer' => s(:lit, 2)
     assert_captures 'a ? 2 : 3', '((COND)) ? ((TRUE)) : ((FALSE))',
@@ -57,7 +57,7 @@ class RubyFragmentTest < Test::Unit::TestCase
   end
   
   def assert_captures(source, pattern, expected)
-    matcher = SexpPath::Matcher::RubyFragment.new(pattern)
+    matcher = SexpPath::Matcher::RubyFragment.new(pattern, true)
     sexp = Sexp.from_array(ParseTree.new.parse_tree_for_string(source))
     actual = {}
     assert matcher.satisfy?(sexp, actual)

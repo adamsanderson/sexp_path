@@ -7,7 +7,7 @@ class SexpPath::Matcher::RubyFragment < SexpPath::Matcher::Base
   attr_reader :fragment
   attr_reader :fragment_sexp
   
-  def initialize(fragment, lenient=true)
+  def initialize(fragment, lenient=false)
     initial_fragment = fragment
 
     parser = ParseTree.new()

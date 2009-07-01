@@ -29,6 +29,26 @@ module SexpPath
       end
     end
     
+    # Searches for the +pattern+ yielding a SexpResult
+    # for each match, and replacing it with the result of
+    # the block.  Note: This is somewhat experimental, seems to work for now.
+    #
+    def replace_sexp(pattern, data={}, &block)
+      return self unless pattern.is_a? Sexp
+  
+      if pattern.satisfy?(self, data)
+        return block.call(SexpResult.new(self, data))
+      end
+      
+      self.each_with_index do |subset, i|
+        case subset
+          when Sexp then self[i] = (subset.replace_sexp(pattern, data, &block))
+        end
+      end
+      
+      return self
+    end
+    
     # Sets a named capture for the Matcher.  If a SexpResult is returned
     # any named captures will be available it.
     def capture_as(name)

@@ -31,8 +31,11 @@ module SexpPath
     
     # Searches for the +pattern+ yielding a SexpResult
     # for each match, and replacing it with the result of
-    # the block.  Note: This is somewhat experimental, seems to work for now.
+    # the block. 
     #
+    # There is no guarantee that the result will or will not 
+    # be the same object passed in, meaning this mutates, or replaces
+    # the original sexp.
     def replace_sexp(pattern, data={}, &block)
       return self unless pattern.is_a? Sexp
   

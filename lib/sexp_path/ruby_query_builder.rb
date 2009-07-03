@@ -12,7 +12,7 @@ module SexpPath
       # Requires ParseTree to be installed at the moment.
       #
       def rb(fragment)
-        
+        SexpPath::Matcher::RubyFragment.new(fragment)
       end
     end
   end

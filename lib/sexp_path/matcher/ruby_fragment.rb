@@ -7,25 +7,13 @@ class SexpPath::Matcher::RubyFragment < SexpPath::Matcher::Base
   attr_reader :fragment
   attr_reader :fragment_sexp
   
-  def initialize(fragment, lenient=false)
+  def initialize(fragment)
     initial_fragment = fragment
 
     parser = ParseTree.new()
     fallbacks = [:with_closing_end, :with_closing_brace]
 
-    begin
-      @fragment_sexp = Sexp.from_array(parser.parse_tree_for_string(fragment))
-      
-    rescue SyntaxError=>ex
-      # Try and find some way to make this parse
-      if lenient && (fallback = fallbacks.shift)
-        fragment = self.send(fallback, initial_fragment)
-        retry
-      else
-        raise # re-raise exception, there's nothing we can do to make this valid.
-      end
-    end
-    
+    @fragment_sexp = Sexp.from_array(parser.parse_tree_for_string(fragment))
     @fragment = fragment
     replace_placeholders!
   end
@@ -40,14 +28,7 @@ class SexpPath::Matcher::RubyFragment < SexpPath::Matcher::Base
   end
   
   private
-  def with_closing_end(fragment)
-    fragment + "; ((IMPLICIT)) end"
-  end
-  
-  def with_closing_brace(fragment)
-    fragment + "; ((IMPLICIT)) }"
-  end
-  
+
   def placeholder_values
     values = []
     fragment.scan(PLACEHOLDER_REGEXP){|m| values << m.first}

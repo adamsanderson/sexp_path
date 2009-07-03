@@ -9,15 +9,7 @@ class RubyFragmentTest < Test::Unit::TestCase
     assert_parses_ruby_strictly 'def cake; 1; end', "Should handle method definitions"
     assert_parses_ruby_strictly '1 + ((INTEGER))', "Should allow placeholder values"
   end
-  
-  def test_parsing_valid_ruby_fragments
-    assert_parses_ruby_leniently 'def cake',                        "Should handle opened methods"
-    assert_parses_ruby_leniently 'class Cake',                      "Should handle opened classes"
-    assert_parses_ruby_leniently "class Cake\n attr_reader :attr",  "Should handle partial classes"
-    assert_parses_ruby_leniently '[1,2,3].each do |a|',             "Should handle do/end blocks"
-    assert_parses_ruby_leniently '[1,2,3].each{|a|',                "Should handle {} blocks"
-  end
-  
+    
   def test_placeholder_regexp
     regexp = SexpPath::Matcher::RubyFragment::PLACEHOLDER_REGEXP
     assert "1 + ((INTEGER))".match(regexp)
@@ -37,13 +29,13 @@ class RubyFragmentTest < Test::Unit::TestCase
       'true' => s(:lit, 2),
       'false'=> s(:lit, 3)
       
-    assert_captures '[1,2].map{|a| a}', '[1,2].map{|a|', 'implicit' => s(:dvar, :a)
+    assert_captures '[1,2].map{|a| a}', '[1,2].map{|a| ((VAL))}', 'val' => s(:dvar, :a)
   end
   
   private
   def assert_parses_ruby_strictly(code, message=nil)
     assert_nothing_raised message do 
-      matcher = SexpPath::Matcher::RubyFragment.new(code, false)
+      matcher = SexpPath::Matcher::RubyFragment.new(code)
       assert_equal code, matcher.fragment, message
       assert matcher.fragment_sexp, message
     end
@@ -51,13 +43,13 @@ class RubyFragmentTest < Test::Unit::TestCase
   
   def assert_parses_ruby_leniently(code, message=nil)
     assert_nothing_raised message do 
-      matcher = SexpPath::Matcher::RubyFragment.new(code, true)
+      matcher = SexpPath::Matcher::RubyFragment.new(code)
       assert matcher.fragment.include?(code), message # Should contain fragment
     end
   end
   
   def assert_captures(source, pattern, expected)
-    matcher = SexpPath::Matcher::RubyFragment.new(pattern, true)
+    matcher = SexpPath::Matcher::RubyFragment.new(pattern)
     sexp = Sexp.from_array(ParseTree.new.parse_tree_for_string(source))
     actual = {}
     assert matcher.satisfy?(sexp, actual)

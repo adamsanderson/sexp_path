@@ -78,6 +78,11 @@ into SexpPath.
 
     all( s(:a, atom), s(atom, :b) ) => s(:a,:b)
     
+[Not] Negates a matcher
+
+    -s(:a) => s(:a,:b), s(:b), but not s(:a)
+    s(is_not :a) => s(:b), s(:c), but not s(:a) or s(:a, :b)
+    
 == Searching
 
 You may use any SexpPath to search an S-Expression.  SexpPath defines the `/` operator as search,

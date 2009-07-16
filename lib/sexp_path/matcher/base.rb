@@ -29,6 +29,14 @@ class SexpPath::Matcher::Base < Sexp
     SexpPath::Matcher::All.new(self, o)
   end
   
+  # Returns a Matcher that matches whenever this Matcher would not have matched
+  # 
+  # Example:
+  #   -s(:a)
+  def -@
+    SexpPath::Matcher::Not.new(self)
+  end
+  
   # Formats the matcher as:
   #   q(:a, :b)
   def inspect

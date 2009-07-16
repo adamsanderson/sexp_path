@@ -68,7 +68,7 @@ module SexpPath
       #   s(:a) / Q?{ s(atom) }        #=> [s(:a)]
       #   s(:a, s(:b)) / Q?{ s(atom) } #=> [s(:b)]
       #
-      def atom(*args)
+      def atom
         SexpPath::Matcher::Atom.new
       end
     
@@ -90,6 +90,16 @@ module SexpPath
       #
       def all(*args)
         SexpPath::Matcher::All.new(*args)
+      end
+      
+      # Matches when sub expression does not match, see SexpPath::Matcher::Base#-@
+      #
+      # example:
+      #   s(:a) / Q?{ is_not(s(:b)) } #=> [s(:a)]
+      #   s(:a) / Q?{ s(is_not :a) } #=> []
+      #
+      def is_not(arg)
+        SexpPath::Matcher::Not.new(arg)
       end
       
       # Matches anything that has a child matching the sub expression

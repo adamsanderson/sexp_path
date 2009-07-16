@@ -22,6 +22,7 @@ sexp_path_root = File.dirname(__FILE__)+'/sexp_path/'
   matcher/base
   matcher/any
   matcher/all
+  matcher/not
   matcher/child
   matcher/block
   matcher/atom

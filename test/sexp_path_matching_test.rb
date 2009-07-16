@@ -110,7 +110,7 @@ class SexpMatchingPathTest < Test::Unit::TestCase
   end
   
   def test_or_matcher
-    assert Q?{s(:a) | s(:b)}.satisfy?( s(:a) ), "q(:a) should match s(:a)"
+    assert  Q?{s(:a) | s(:b)}.satisfy?( s(:a) ), "q(:a) should match s(:a)"
     assert !Q?{s(:a) | s(:b)}.satisfy?( s(:c) ), "Should not match s(:c)"
     
     assert_search_count s(:a, s(:b, :c), s(:b, :d)), Q?{s(:b, :c) | s(:b, :d)}, 2, 
@@ -123,7 +123,7 @@ class SexpMatchingPathTest < Test::Unit::TestCase
   # For symetry, kind of silly examples
   def test_and_matcher
     assert !Q?{s(:a) & s(:b)}.satisfy?(s(:a)), "s(:a) is not both s(:a) and s(:b)"
-    assert Q?{s(:a) & s(atom)}.satisfy?(s(:a)), "s(:a) matches both criteria"
+    assert  Q?{s(:a) & s(atom)}.satisfy?(s(:a)), "s(:a) matches both criteria"
   end
   
   def test_child_matcher    
@@ -134,10 +134,18 @@ class SexpMatchingPathTest < Test::Unit::TestCase
       "Should match once since there exists a child which includes :a"
   end
   
+  def test_not_matcher
+    assert !Q?{-wild}.satisfy?(s(:a)),        "wild should match s(:a)"
+    assert  Q?{-(s(:b))}.satisfy?(s(:a)),     "s(:b) should not match s(:b)"
+    assert  Q?{is_not(s(:b))}.satisfy?(s(:a)),"should behave the same as unary minus"
+    assert !Q?{-(s(atom))}.satisfy?(s(:a)),   "should not match, :a is an atom"
+    assert  Q?{s(is_not :b)}.satisfy?(s(:a)), "should match s(:a) since the atom is not :b"
+  end
+  
   def test_pattern_matcher
-    assert Q?{m(/a/)}.satisfy?(:a),             "Should match :a"
-    assert Q?{m(/^test/)}.satisfy?(:test_case), "Should match :test_case"
-    assert Q?{m('test')}.satisfy?(:test),       "Should match :test #{Q?{m('test')}.inspect}"
+    assert  Q?{m(/a/)}.satisfy?(:a),             "Should match :a"
+    assert  Q?{m(/^test/)}.satisfy?(:test_case), "Should match :test_case"
+    assert  Q?{m('test')}.satisfy?(:test),       "Should match :test #{Q?{m('test')}.inspect}"
     assert !Q?{m('test')}.satisfy?(:test_case), "Should only match whole word 'test'"
     assert !Q?{m(/a/)}.satisfy?(s(:a)),         "Should not match s(:a)"
     

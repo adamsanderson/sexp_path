@@ -15,6 +15,6 @@ class SexpPath::Matcher::Not < SexpPath::Matcher::Base
   end
 
   def inspect
-    "include(#{value.inspect})"
+    "is_not(#{value.inspect})"
   end
 end

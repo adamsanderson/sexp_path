@@ -139,7 +139,7 @@ class SexpMatchingPathTest < Test::Unit::TestCase
     assert  Q?{-(s(:b))}.satisfy?(s(:a)),     "s(:b) should not match s(:b)"
     assert  Q?{is_not(s(:b))}.satisfy?(s(:a)),"should behave the same as unary minus"
     assert !Q?{-(s(atom))}.satisfy?(s(:a)),   "should not match, :a is an atom"
-    assert  Q?{s(is_not :b)}.satisfy?(s(:a)), "should match s(:a) since the atom is not :b"
+    assert  Q?{s(is_not(:b))}.satisfy?(s(:a)), "should match s(:a) since the atom is not :b"
   end
   
   def test_pattern_matcher

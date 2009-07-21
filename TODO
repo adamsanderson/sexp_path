@@ -1,5 +1,4 @@
 * Clean up class organization
 * Document extending SexpPath
-* Add sibling operators: <<, >> [WIP]
 * Add examples of extending matchers
 * AssertSanity!

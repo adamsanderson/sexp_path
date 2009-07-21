@@ -143,10 +143,13 @@ class SexpMatchingPathTest < Test::Unit::TestCase
   end
   
   def test_sibling_matcher
+    assert_equal SexpPath::Matcher::Sibling, Q?{(s(:a) >> s(:b))}.class 
+    
     assert  Q?{s(:a) >> s(:b)}.satisfy?( s(s(:a), s(:b)) ),        "should match s(:a) has an immediate sibling s(:b)"
     assert  Q?{s(:a) >> s(:b)}.satisfy?( s(s(:a), s(:b), s(:c)) ), "should match s(:a) has an immediate sibling s(:b)"
     assert  Q?{s(:a) >> s(:c)}.satisfy?( s(s(:a), s(:b), s(:c)) ), "should match s(:a) a sibling s(:b)"
     assert !Q?{s(:c) >> s(:a)}.satisfy?( s(s(:a), s(:b), s(:c)) ), "should not match s(:a) does not follow s(:c)"
+    assert !Q?{s(:a) >> s(:a)}.satisfy?( s(s(:a)) ),               "should not match s(:a) has no siblings"
     assert  Q?{s(:a) >> s(:a)}.satisfy?( s(s(:a), s(:b), s(:a)) ), "should match s(:a) has another sibling s(:a)"
     
     assert_search_count @ast_sexp, Q?{t(:defn) >> t(:defn)}, 1,

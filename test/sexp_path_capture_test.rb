@@ -121,4 +121,11 @@ class SexpPathCaptureTest < Test::Unit::TestCase
     assert !res['b'], 'b should not be included'
   end
   
+  def test_capturing_siblings
+    sexp = s(s(:a), s(s(:b)), s(:c))
+    assert res = Q?{ (s(atom) % 'a') >> (s(atom) % 'c') }.satisfy?( sexp )
+    assert_equal s(:a), res['a']
+    assert_equal s(:c), res['c']
+  end
+  
 end

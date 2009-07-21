@@ -108,4 +108,17 @@ class SexpPathCaptureTest < Test::Unit::TestCase
     assert_equal sexp, res['include']
     assert_equal :a, res['atom']
   end
+  
+  def test_capturing_negations
+    sexp = s(:b)
+    assert res = Q?{ (-s(:a)) % 'not' }.satisfy?( sexp )
+    assert_equal s(:b), res['not']
+  end
+  
+  def test_capturing_negation_contents
+    sexp = s(:a, :b)
+    assert res = Q?{ -((include(:b) % 'b') & t(:c)) }.satisfy?( sexp )
+    assert !res['b'], 'b should not be included'
+  end
+  
 end

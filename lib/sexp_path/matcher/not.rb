@@ -11,7 +11,7 @@ class SexpPath::Matcher::Not < SexpPath::Matcher::Base
   def satisfy?(o, data={})
     return nil if value.is_a?(Sexp) ? value.satisfy?(o, data) : value == o
 
-    capture_match o, data
+    capture_match o, {}
   end
 
   def inspect

@@ -37,6 +37,14 @@ class SexpPath::Matcher::Base < Sexp
     SexpPath::Matcher::Not.new(self)
   end
   
+  # Returns a Matcher that matches if this has a sibling +o+
+  # 
+  # Example:
+  #   s(:a) >> s(:b)
+  def >> o
+    SexpPath::Matcher::Sibling.new(self, o)
+  end
+  
   # Formats the matcher as:
   #   q(:a, :b)
   def inspect

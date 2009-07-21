@@ -64,6 +64,9 @@ into SexpPath.
 [Child] Matches any S-Expression that has the sub expression as a child.
 
     child( s(:a) ) => s(:b, s(:a)) or even s(s(s(s(s( s(:a))))))
+    
+[Sibling] Matches any S-Expression that has the second expression as a sibling.
+    s(:a) >> s(:c) => s( s(:a), s(:b), s(:c) )
 
 [Type] The sexp type is considered to be the first atom.  This matches any expression that has the given type.
 

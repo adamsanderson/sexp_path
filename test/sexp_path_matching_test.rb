@@ -142,6 +142,17 @@ class SexpMatchingPathTest < Test::Unit::TestCase
     assert  Q?{s(is_not(:b))}.satisfy?(s(:a)), "should match s(:a) since the atom is not :b"
   end
   
+  def test_sibling_matcher
+    assert  Q?{s(:a) >> s(:b)}.satisfy?( s(s(:a), s(:b)) ),        "should match s(:a) has an immediate sibling s(:b)"
+    assert  Q?{s(:a) >> s(:b)}.satisfy?( s(s(:a), s(:b), s(:c)) ), "should match s(:a) has an immediate sibling s(:b)"
+    assert  Q?{s(:a) >> s(:c)}.satisfy?( s(s(:a), s(:b), s(:c)) ), "should match s(:a) a sibling s(:b)"
+    assert !Q?{s(:c) >> s(:a)}.satisfy?( s(s(:a), s(:b), s(:c)) ), "should not match s(:a) does not follow s(:c)"
+    assert  Q?{s(:a) >> s(:a)}.satisfy?( s(s(:a), s(:b), s(:a)) ), "should match s(:a) has another sibling s(:a)"
+    
+    assert_search_count @ast_sexp, Q?{t(:defn) >> t(:defn)}, 1,
+      "Should match s(:add, :a, :b) followed by s(:sub, :a, :b)"
+  end
+  
   def test_pattern_matcher
     assert  Q?{m(/a/)}.satisfy?(:a),             "Should match :a"
     assert  Q?{m(/^test/)}.satisfy?(:test_case), "Should match :test_case"

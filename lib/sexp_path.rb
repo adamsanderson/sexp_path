@@ -30,6 +30,7 @@ sexp_path_root = File.dirname(__FILE__)+'/sexp_path/'
   matcher/type
   matcher/wild
   matcher/include
+  matcher/sibling
   
 ].each do |path|
   require sexp_path_root+path

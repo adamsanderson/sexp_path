@@ -2,24 +2,26 @@
 
 Gem::Specification.new do |s|
   s.name = %q{sexp_path}
-  s.version = "0.3.0"
+  s.version = "0.4.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Adam Sanderson"]
-  s.date = %q{2009-06-15}
+  s.date = %q{2009-07-20}
   s.description = %q{      Allows you to do example based pattern matching and queries against S Expressions (sexp).
 }
   s.email = %q{netghost@gmail.com}
   s.extra_rdoc_files = [
-    "README.markdown"
+    "README.rdoc"
   ]
   s.files = [
-    "README.markdown",
+    "README.rdoc",
     "Rakefile",
     "TODO",
     "VERSION.yml",
     "examples/print_methods.rb",
+    "examples/sexp_grep.rb",
     "lib/sexp_path.rb",
+    "lib/sexp_path/line_numbering_processor.rb",
     "lib/sexp_path/matcher/all.rb",
     "lib/sexp_path/matcher/any.rb",
     "lib/sexp_path/matcher/atom.rb",
@@ -27,16 +29,20 @@ Gem::Specification.new do |s|
     "lib/sexp_path/matcher/block.rb",
     "lib/sexp_path/matcher/child.rb",
     "lib/sexp_path/matcher/include.rb",
+    "lib/sexp_path/matcher/not.rb",
     "lib/sexp_path/matcher/pattern.rb",
+    "lib/sexp_path/matcher/sibling.rb",
     "lib/sexp_path/matcher/type.rb",
     "lib/sexp_path/matcher/wild.rb",
     "lib/sexp_path/sexp_collection.rb",
     "lib/sexp_path/sexp_query_builder.rb",
     "lib/sexp_path/sexp_result.rb",
     "lib/sexp_path/traverse.rb",
+    "test/line_numbering_processor_test.rb",
     "test/sample.rb",
     "test/sexp_path_capture_test.rb",
     "test/sexp_path_matching_test.rb",
+    "test/sexp_replacement_test.rb",
     "test/use_case_test.rb"
   ]
   s.has_rdoc = true
@@ -46,8 +52,10 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.2}
   s.summary = %q{Pattern matching for S-Expressions (sexp).}
   s.test_files = [
+    "test/line_numbering_processor_test.rb",
     "test/sexp_path_capture_test.rb",
     "test/sexp_path_matching_test.rb",
+    "test/sexp_replacement_test.rb",
     "test/use_case_test.rb"
   ]
 

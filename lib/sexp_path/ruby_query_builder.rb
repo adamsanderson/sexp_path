@@ -14,6 +14,16 @@ module SexpPath
       def rb(fragment)
         SexpPath::Matcher::RubyFragment.new(fragment)
       end
+      
+      # s(:class,
+      #   :ExampleTest,
+      #   s(:colon2, s(:colon2, s(:const, :Test), :Unit), :TestCase),
+      #   s(:scope,
+      #    s(:block,
+      def cls(name= atom, parent= wild, scope= wild)
+        s(:class, name, parent, scope)
+      end
+      
     end
   end
 end

@@ -42,6 +42,11 @@ def Q?(&block)
   SexpPath::SexpQueryBuilder.do(&block)
 end
 
+# Ruby pattern building helper, see RubyQueryBuilder
+def RB?(&block)
+  SexpPath::RubyQueryBuilder.do(&block)
+end
+
 # SexpPath extends Sexp with Traverse.
 # This adds support for searching S-Expressions
 class Sexp

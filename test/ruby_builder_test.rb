@@ -24,6 +24,12 @@ class RubyBuilderTest < Test::Unit::TestCase
     assert_search_count @sexp, RB?{ defn(/^test_/) },       3, "Should match all the test methods"
   end
   
+  def test_finding_calls
+    assert_search_count @sexp, RB?{ call },                 12, "Should match all the method calls"
+    assert_search_count @sexp, RB?{ call(_, nil)   },       5,  "Should match all the calls to self"
+    assert_search_count @sexp, RB?{ call_self      },       5,  "Should match all the self.calls"
+    assert_search_count @sexp, RB?{ call(/^assert_/) },     2,  "Should match all the assertions"
+  end
   
   private
   def assert_search_count(sexp, example, count, message)

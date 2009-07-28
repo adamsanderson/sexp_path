@@ -36,6 +36,11 @@ class SexpMatchingPathTest < Test::Unit::TestCase
       "Nested sexp should exactly match once"
   end
   
+  def test_matching_nil
+    assert Q?{s(nil)}.satisfy?( s(nil) ), "Should match expressions which contain only nil"
+    assert Q?{s(:a,nil)}.satisfy?( s(:a,nil) ), "Should match expressions with nil in them"
+  end
+  
   def test_equality_of_atom
     a = SexpPath::Matcher::Atom.new
     assert a.satisfy?(:a),  "Should match a symbol"

@@ -3,7 +3,7 @@ require 'test/unit/testcase'
 
 class ExampleTest < Test::Unit::TestCase  
   def setup
-    1 + 2
+    x = 1 + 2
   end
   
   def test_a

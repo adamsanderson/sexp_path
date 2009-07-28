@@ -18,14 +18,26 @@ module SexpPath
       # Matches a ruby Class node.
       #  s(:class,'name','parent','contents')
       #
-      def cls(name= atom, parent= wild, contents= wild)
+      def cls(name=atom, parent= wild, contents= wild)
         s(:class, name_argument(name), parent, contents)
       end
       
       # Matches a ruby method definition node.
       #  s(:defn, 'name', 'args', 'contents')
-      def defn(name= atom, args= wild, contents= wild)
+      def defn(name=atom, args= wild, contents= wild)
         s(:defn, name_argument(name), args, contents)
+      end
+      
+      # Matches method calls
+      #  s(:call, 'receiver', 'method_name', 'argument_list')
+      def call(name=atom, receiver=wild, args=wild)
+        s(:call, receiver, name_argument(name), args)
+      end
+            
+      # Matches calls on self, ie: `self.test`
+      #  s(:call, nil, 'method_name', 'argument_list')
+      def call_self(name=atom, args=wild)
+        s(:call, nil, name_argument(name), args)
       end
       
       private

@@ -15,13 +15,25 @@ module SexpPath
         SexpPath::Matcher::RubyFragment.new(fragment)
       end
       
-      # s(:class,
-      #   :ExampleTest,
-      #   s(:colon2, s(:colon2, s(:const, :Test), :Unit), :TestCase),
-      #   s(:scope,
-      #    s(:block,
-      def cls(name= atom, parent= wild, scope= wild)
-        s(:class, name, parent, scope)
+      # Matches a ruby Class node.
+      #  s(:class,'name','parent','contents')
+      #
+      def cls(name= atom, parent= wild, contents= wild)
+        s(:class, name_argument(name), parent, contents)
+      end
+      
+      # Matches a ruby method definition node.
+      #  s(:defn, 'name', 'args', 'contents')
+      def defn(name= atom, args= wild, contents= wild)
+        s(:defn, name_argument(name), args, contents)
+      end
+      
+      private
+      def name_argument(name)
+        case name
+          when String, Regexp then m(name)
+          else name
+        end
       end
       
     end

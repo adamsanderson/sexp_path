@@ -6,7 +6,8 @@ class RubyBuilderTest < Test::Unit::TestCase
   def setup
     path = File.dirname(__FILE__) + '/sample.rb'
     sample = File.read(path)
-    @sexp = Sexp.from_array(ParseTree.new.parse_tree_for_string(sample, path))
+
+    @sexp = Unifier.new.process(Sexp.from_array(ParseTree.new.parse_tree_for_string(sample, path).first))
   end
   
   def test_finding_a_class
@@ -16,6 +17,13 @@ class RubyBuilderTest < Test::Unit::TestCase
     assert_search_count @sexp, RB?{ cls(:OtherTes) },       0, "Should not match"
     assert_search_count s(),   RB?{ cls },                  0, "Should not match empty Sexp"
   end
+  
+  def test_finding_a_method_definition
+    assert_search_count @sexp, RB?{ defn },                 5, "Should match all the methods"
+    assert_search_count @sexp, RB?{ defn m(/^test_/) },     3, "Should match all the test methods"
+    assert_search_count @sexp, RB?{ defn(/^test_/) },       3, "Should match all the test methods"
+  end
+  
   
   private
   def assert_search_count(sexp, example, count, message)

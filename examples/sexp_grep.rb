@@ -32,7 +32,7 @@ end
 # For each path the user defined, search for the SexpPath pattern
 paths.each do |path|  
   # Parse it with ParseTree, and append line numbers
-  sexp = sexp = LineNumberingProcessor.process_file(path)
+  sexp = LineNumberingProcessor.rewrite_file(path)
   found = false
   
   # Search it with the given pattern, printing any results

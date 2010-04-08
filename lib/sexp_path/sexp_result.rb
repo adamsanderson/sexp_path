@@ -17,5 +17,11 @@ module SexpPath
       @sexp = sexp
       merge! data
     end
+
+    # Shortcut for querying directly against a result's
+    # Sexp.
+    def /(query)
+      @sexp / query
+    end
   end
 end

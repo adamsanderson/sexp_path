@@ -3,9 +3,9 @@
 Structural pattern matching against S-Expressions.
 
 SexpPath allows you to define patterns that can be matched against S-Expressions.
-SexpPath draws inspiration from Regular Expressions, XPath, and CSS Selectors.
+It draws inspiration from Regular Expressions, XPath, and CSS Selectors.
 
-I'm still figuring out how SexpPath should work so either fork this, or send me
+I'm still figuring out how this should work so either fork this, or send me
 some feedback.
   http://github.com/adamsanderson/sexp_path
   netghost@gmail.com
@@ -14,7 +14,7 @@ some feedback.
 
 SexpPath is distributed as a ruby gem:
     
-    gem install adamsanderson-sexp_path
+    gem install sexp_path
 
 == Notation
 
@@ -160,7 +160,7 @@ Ideas for Hacking on SexpPath:
   
   * More examples
   * Add new matchers
-  * Connivence matchers, for instance canned matchers for matching ruby classes, methods, etc
+  * Convenience matchers, for instance canned matchers for matching ruby classes, methods, etc
 
 I'd love to see what people do with this library, let me know if you find it useful.
 

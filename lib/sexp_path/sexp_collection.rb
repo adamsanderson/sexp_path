@@ -9,7 +9,7 @@ module SexpPath
   class SexpCollection < Array
     # See Traverse#search
     def search(pattern)
-      inject(SexpCollection.new){|collection, match| collection.concat match.sexp.search(pattern, match) }
+      inject(SexpCollection.new){|collection, match| collection.concat match.search(pattern, match) }
     end
     alias_method :/, :search
   end

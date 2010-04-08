@@ -20,8 +20,9 @@ module SexpPath
 
     # Shortcut for querying directly against a result's
     # Sexp.
-    def /(query)
-      @sexp / query
+    def search(pattern, data={})
+      @sexp.search(pattern,data)
     end
+    alias_method :/, :search
   end
 end

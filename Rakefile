@@ -20,7 +20,7 @@ begin
     
     # Testing
     s.test_files = FileList["test/**/*_test.rb"]
-    s.add_development_dependency 'ParseTree', '~> 2.1'
+    s.add_development_dependency 'ParseTree', '~> 3.0'
   end
 
 rescue LoadError

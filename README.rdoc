@@ -19,7 +19,7 @@ SexpPath is distributed as a ruby gem:
 == Notation
 
 In ruby you're most likely to come across S-Expressions when dealing with
-ParseTree's representation of the abstract syntax tree. An S-Expression is
+Ruby's representation of the abstract syntax tree. An S-Expression is
 just a set of nested lists.  The SexpProcessor library displays them like this:
 
     s(:a, :b, 
@@ -129,11 +129,11 @@ a file:
   
     require 'rubygems'
     require 'sexp_path'
-    require 'parse_tree'
+    require 'ruby_parser' # `gem install ruby_parser`
   
     path = ARGV.shift
     code = File.read(path)
-    sexp = Sexp.from_array(ParseTree.new.parse_tree_for_string(code, path))
+    sexp = RubyParser.new.parse(code, path)
 
     class_query = Q?{ s(:class, atom % 'class_name', _, _) }
     method_query = Q?{ s(:defn, atom % 'method_name', _ ) }

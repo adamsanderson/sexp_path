@@ -1,6 +1,6 @@
 require 'test/unit'
 require File.dirname(__FILE__) + '/../lib/sexp_path'
-require 'parse_tree'
+require 'ruby_parser'
 require 'set'
 
 # Here's a crazy idea, these tests actually use sexp_path on some "real"
@@ -13,7 +13,7 @@ class UseCaseTest < Test::Unit::TestCase
   def setup
     path = File.dirname(__FILE__) + '/sample.rb'
     sample = File.read(path)
-    @sexp = Sexp.from_array(ParseTree.new.parse_tree_for_string(sample, path))
+    @sexp = Sexp.from_array(RubyParser.new.parse(sample, path))
   end
   
   def test_finding_methods
@@ -31,23 +31,23 @@ class UseCaseTest < Test::Unit::TestCase
   end
   
   def test_finding_empty_test_methods
-    empty_body = Q?{ s(:scope, s(:block, t(:args), s(:nil))) }
-    res = @sexp / Q?{ s(:defn, m(/^test_.+/) % 'name', empty_body ) }
+    empty_body = Q?{ s(:scope, s(:block, s(:nil))) }
+    res = @sexp / Q?{ s(:defn, m(/^test_.+/) % 'name', _, empty_body ) }
     assert_equal 1, res.length
     assert_equal :test_b, res.first['name']
   end
   
   def test_finding_duplicate_test_names
-    res = @sexp / Q?{ s(:defn, m(/^test_.+/) % 'name', _ ) }
-    seen = Set.new()
-    repeated = 0
+    res = @sexp / Q?{ s(:defn, m(/^test_.+/) % 'name', _, _) }
+    counts = Hash.new{|h,k| h[k] = 0}
+
     res.each do |m|
-      name = m['name']
-      repeated += 1 if seen.include? name
-      seen << name
+      method_name = m['name']
+      counts[method_name] += 1
     end
     
-    assert_equal 1, repeated, "Should have caught test_a being repeated"
+    assert_equal 1, counts[:test_b], "Should have seen test_b once"
+    assert_equal 2, counts[:test_a], "Should have caught test_a being repeated"
   end
   
   def test_rewriting_colon2s_oh_man_i_hate_those_in_most_cases_but_i_understand_why_they_are_there

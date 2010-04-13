@@ -16,9 +16,7 @@ sexp_path_root = File.dirname(__FILE__)+'/sexp_path/'
   sexp_query_builder
   sexp_result
   sexp_collection
-  
-  line_numbering_processor
-  
+    
   matcher/base
   matcher/any
   matcher/all

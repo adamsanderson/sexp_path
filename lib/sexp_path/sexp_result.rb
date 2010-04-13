@@ -27,7 +27,7 @@ module SexpPath
     
     def to_s
       if empty?
-        @sexp
+        @sexp.to_s
       else
         matches = self.map{|k,v| "#{k}:#{v}"}.join(", ")
         "#{@sexp} [#{matches}]"

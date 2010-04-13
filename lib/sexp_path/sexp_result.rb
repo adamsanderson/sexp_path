@@ -24,5 +24,18 @@ module SexpPath
       @sexp.search(pattern,data)
     end
     alias_method :/, :search
+    
+    def to_s
+      if empty?
+        @sexp
+      else
+        matches = self.map{|k,v| "#{k}:#{v}"}.join(", ")
+        "#{@sexp} [#{matches}]"
+      end
+    end
+    
+    def inspect
+      "#{@sexp} #{super}"
+    end
   end
 end

@@ -1,6 +1,6 @@
 require 'rubygems'
 require File.dirname(__FILE__) + '/../lib/sexp_path'
-require 'parse_tree'
+require 'ruby_parser'
 
 # Example program, this will scan a file for anything
 # matching the Sexp passed in.
@@ -14,7 +14,7 @@ if paths.empty? || !pattern
   puts "usage:"
   puts "  ruby sexp_grep.rb <pattern> <path>"
   puts "example:"
-  puts "  ruby sexp_grep.rb t(:defn) *.rb"
+  puts "  ruby sexp_grep.rb 't(:defn)' *.rb"
   exit
 end
 
@@ -31,8 +31,8 @@ end
 
 # For each path the user defined, search for the SexpPath pattern
 paths.each do |path|  
-  # Parse it with ParseTree, and append line numbers
-  sexp = LineNumberingProcessor.rewrite_file(path)
+  # Parse it with RubyParser, and append line numbers
+  sexp = RubyParser.new.parse(File.read(path), path)
   found = false
   
   # Search it with the given pattern, printing any results

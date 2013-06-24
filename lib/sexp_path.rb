@@ -14,6 +14,7 @@ sexp_path_root = File.dirname(__FILE__)+'/sexp_path/'
 %w[
   traverse 
   sexp_query_builder
+  ruby_query_builder
   sexp_result
   sexp_collection
     
@@ -37,6 +38,11 @@ end
 # Pattern building helper, see SexpQueryBuilder
 def Q?(&block)
   SexpPath::SexpQueryBuilder.do(&block)
+end
+
+# Ruby specific builder
+def R?(&block)
+  SexpPath::RubyQueryBuilder.do(&block)
 end
 
 # SexpPath extends Sexp with Traverse.

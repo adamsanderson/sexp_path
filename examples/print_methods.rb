@@ -13,16 +13,14 @@ end
 code = File.read(path)
 sexp = RubyParser.new.parse(code, path)
 
-class_query = Q?{ s(:class, atom % 'class_name', _, _) }
-method_query = Q?{ s(:defn, atom % 'method_name', _, _ ) }
-
-results = sexp / class_query / method_query
+# Use the ruby pattern matcher:
+results = sexp / R?{ _class } / R?{ _method }
 
 puts path
 puts "-" * 80
 
 results.each do |sexp_result|
-  class_name = sexp_result['class_name']
-  method_name = sexp_result['method_name']
+  class_name = sexp_result['class']
+  method_name = sexp_result['method']
   puts "#{class_name}##{method_name}"
 end

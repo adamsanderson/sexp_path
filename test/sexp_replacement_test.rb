@@ -1,5 +1,5 @@
 require 'test/unit'
-require File.dirname(__FILE__) + '/../lib/sexp_path'
+require 'sexp_path'
 
 class SexpReplacementTest < Test::Unit::TestCase  
   def test_replacing_exact_matches

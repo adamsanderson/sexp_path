@@ -72,7 +72,7 @@ module SexpPath
         SexpPath::Matcher::Atom.new
       end
     
-      # Matches when any sub expression match
+      # Matches when any of the sub expressions match.
       # 
       # example:
       #   s(:a) / Q?{ any(s(:a), s(:b)) } #=> [s(:a)]
@@ -82,7 +82,7 @@ module SexpPath
         SexpPath::Matcher::Any.new(*args)
       end
       
-      # Matches when all sub expression match
+      # Matches only when all sub expressions match
       #
       # example:
       #   s(:a) / Q?{ all(s(:a), s(:b)) } #=> []

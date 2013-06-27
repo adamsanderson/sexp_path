@@ -54,7 +54,7 @@ class Sexp
   # Extends Sexp to allow any Sexp to be used as a SexpPath matcher
   def satisfy?(o, data={})
     return false unless o.is_a? Sexp
-    return false unless length == o.length
+    return false unless (length == o.length || last.is_a?(SexpPath::Matcher::Remaining) )
     each_with_index{|c,i| return false unless c.is_a?(Sexp) ? c.satisfy?( o[i], data ) : c == o[i] }
 
     capture_match(o, data)

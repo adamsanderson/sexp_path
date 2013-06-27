@@ -13,7 +13,7 @@ class UseCaseTest < Test::Unit::TestCase
   def setup
     path = File.dirname(__FILE__) + '/sample.rb'
     sample = File.read(path)
-    @sexp = Sexp.from_array(RubyParser.new.parse(sample, path))
+    @sexp = RubyParser.new.parse(sample, path)
   end
   
   def test_finding_methods
@@ -22,7 +22,7 @@ class UseCaseTest < Test::Unit::TestCase
   end
   
   def test_finding_classes_and_methods
-    res = @sexp / Q?{ s(:class, atom % 'name', _, _) }
+    res = @sexp / Q?{ s(:class, atom % 'name', ___ ) }
     assert_equal 1, res.length
     assert_equal :ExampleTest, res.first['name']
     
@@ -31,14 +31,15 @@ class UseCaseTest < Test::Unit::TestCase
   end
   
   def test_finding_empty_test_methods
-    empty_body = Q?{ s(:scope, s(:block, s(:nil))) }
-    res = @sexp / Q?{ s(:defn, m(/^test_.+/) % 'name', _, empty_body ) }
+    empty_test = Q?{ s(:defn, m(/^test_.+/) % 'name', s(:args), s(:nil)) }
+    res = @sexp / empty_test
+    
     assert_equal 1, res.length
     assert_equal :test_b, res.first['name']
   end
   
   def test_finding_duplicate_test_names
-    res = @sexp / Q?{ s(:defn, m(/^test_.+/) % 'name', _, _) }
+    res = @sexp / Q?{ s(:defn, m(/^test_.+/) % 'name', ___ ) }
     counts = Hash.new{|h,k| h[k] = 0}
 
     res.each do |m|

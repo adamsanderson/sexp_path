@@ -28,6 +28,7 @@ sexp_path_root = File.dirname(__FILE__)+'/sexp_path/'
   matcher/pattern
   matcher/type
   matcher/wild
+  matcher/remaining
   matcher/include
   matcher/sibling
   

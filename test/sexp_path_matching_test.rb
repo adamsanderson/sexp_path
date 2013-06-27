@@ -147,7 +147,7 @@ class SexpMatchingPathTest < Test::Unit::TestCase
     
     assert  Q?{s(:a) >> s(:b)}.satisfy?( s(s(:a), s(:b)) ),        "should match s(:a) has an immediate sibling s(:b)"
     assert  Q?{s(:a) >> s(:b)}.satisfy?( s(s(:a), s(:b), s(:c)) ), "should match s(:a) has an immediate sibling s(:b)"
-    assert  Q?{s(:a) >> s(:c)}.satisfy?( s(s(:a), s(:b), s(:c)) ), "should match s(:a) a sibling s(:b)"
+    assert  Q?{s(:a) >> s(:c)}.satisfy?( s(s(:a), s(:b), s(:c)) ), "should match s(:a) has a sibling s(:b)"
     assert !Q?{s(:c) >> s(:a)}.satisfy?( s(s(:a), s(:b), s(:c)) ), "should not match s(:a) does not follow s(:c)"
     assert !Q?{s(:a) >> s(:a)}.satisfy?( s(s(:a)) ),               "should not match s(:a) has no siblings"
     assert  Q?{s(:a) >> s(:a)}.satisfy?( s(s(:a), s(:b), s(:a)) ), "should match s(:a) has another sibling s(:a)"
@@ -165,6 +165,13 @@ class SexpMatchingPathTest < Test::Unit::TestCase
     
     assert_search_count @ast_sexp, Q?{s(m(/\w{3}/), :a, :b)}, 2,
       "Should match s(:add, :a, :b) and s(:sub, :a, :b)"
+  end
+
+  def test_remaining_matcher
+    assert  Q?{ ___ }.satisfy?( s(:a) ),         "Should match a single atom"
+    assert  Q?{ ___ }.satisfy?( s(:a, :b, :c) ), "Should match multiple atoms"
+    assert  Q?{ s(:x, ___ ) }.satisfy?( s(:x, :y) ), "Should match the remainder after :x"
+    assert !Q?{ s(:y, ___ ) }.satisfy?( s(:x, :y) ), "Should not match (initial atom doesn't match)"
   end
   
   def test_search_method

@@ -44,7 +44,7 @@ module SexpPath
         SexpPath::Matcher::Base.new(*args)
       end
       
-      # Matches anything.
+      # Matches any single item.
       #
       # example:
       #   s(:a) / Q?{ _ }        #=> [s(:a)]
@@ -57,7 +57,31 @@ module SexpPath
         SexpPath::Matcher::Wild.new
       end
       alias_method :_, :wild
-    
+      
+      # Matches all remaining input.
+      # This is a special case pattern and has a few odd characteristics.
+      # 
+      # - You cannot capture with +remaining+ 
+      # - If remaining comes before any other matchers, they will be ignored.
+      # 
+      # example:
+      #   s(:a) / Q?{ s(:a, ___ ) }    #=> [s(:a)]
+      #   s(:a, :b, :c) / Q?{ s(:a, ___ ) } #=> [s(:a, :b, :c)]
+      #
+      # Can also be called with +remaining+
+      #   s(:a) / Q?{ s(:a, remaining) } #=> [s(:a)]
+      #
+      def remaining()
+        SexpPath::Matcher::Remaining.new
+      end
+      alias_method :___, :remaining
+      
+      # Matches an expression or any expression that includes the child.
+      #
+      # example:
+      #   s(:a, :b)   / Q?{ include(:b) }
+      #   s(s(s(:a))) / Q?{ include(:a) }
+      # 
       def include(child)
         SexpPath::Matcher::Include.new(child)
       end

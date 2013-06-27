@@ -86,6 +86,10 @@ into SexpPath.
     -s(:a) => s(:a,:b), s(:b), but not s(:a)
     s(is_not :a) => s(:b), s(:c), but not s(:a) or s(:a, :b)
     
+[Remaining] Matches the remainder of an s-expression.
+
+    s(:a, ___)  => s(:a), s(:a, :b, :c), but not s(:b)
+    
 == Searching
 
 You may use any SexpPath to search an S-Expression.  SexpPath defines the `/` operator as search,
@@ -165,3 +169,4 @@ Ideas for Hacking on SexpPath:
 I'd love to see what people do with this library, let me know if you find it useful.
 
     Adam Sanderson, netghost@gmail.com
+    http://monkeyandcrow.com

@@ -1,5 +1,5 @@
 require 'test/unit'
-require File.dirname(__FILE__) + '/../lib/sexp_path'
+require 'sexp_path'
 
 class SexpMatchingPathTest < Test::Unit::TestCase  
   def setup

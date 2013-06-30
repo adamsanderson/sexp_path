@@ -4,15 +4,14 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{sexp_path}
+  s.name = "sexp_path"
   s.version = "0.5.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Adam Sanderson"]
-  s.date = %q{2013-06-26}
-  s.description = %q{      Allows you to do example based pattern matching and queries against S Expressions (sexp).
-}
-  s.email = %q{netghost@gmail.com}
+  s.date = "2013-06-30"
+  s.description = "      Allows you to do example based pattern matching and queries against S Expressions (sexp).\n"
+  s.email = "netghost@gmail.com"
   s.extra_rdoc_files = [
     "README.rdoc",
     "TODO"
@@ -51,34 +50,33 @@ Gem::Specification.new do |s|
     "test/sexp_replacement_test.rb",
     "test/use_case_test.rb"
   ]
-  s.homepage = %q{http://github.com/adamsanderson/sexp_path}
+  s.homepage = "http://github.com/adamsanderson/sexp_path"
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.7}
-  s.summary = %q{Pattern matching for S-Expressions (sexp).}
+  s.rubygems_version = "2.0.3"
+  s.summary = "Pattern matching for S-Expressions (sexp)."
   s.test_files = ["test/sexp_path_capture_test.rb", "test/sexp_path_matching_test.rb", "test/sexp_replacement_test.rb", "test/use_case_test.rb"]
 
   if s.respond_to? :specification_version then
-    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
-    s.specification_version = 3
+    s.specification_version = 4
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<sexp_path>, [">= 0"])
-      s.add_development_dependency(%q<ruby_parser>, ["~> 3.1"])
-      s.add_development_dependency(%q<jeweler>, [">= 0"])
       s.add_runtime_dependency(%q<sexp_processor>, ["~> 3.0"])
+      s.add_development_dependency(%q<jeweler>, [">= 0"])
+      s.add_development_dependency(%q<rake>, [">= 0"])
+      s.add_development_dependency(%q<rdoc>, [">= 2.4.2"])
       s.add_development_dependency(%q<ruby_parser>, ["~> 2.0"])
     else
-      s.add_dependency(%q<sexp_path>, [">= 0"])
-      s.add_dependency(%q<ruby_parser>, ["~> 3.1"])
-      s.add_dependency(%q<jeweler>, [">= 0"])
       s.add_dependency(%q<sexp_processor>, ["~> 3.0"])
+      s.add_dependency(%q<jeweler>, [">= 0"])
+      s.add_dependency(%q<rake>, [">= 0"])
+      s.add_dependency(%q<rdoc>, [">= 2.4.2"])
       s.add_dependency(%q<ruby_parser>, ["~> 2.0"])
     end
   else
-    s.add_dependency(%q<sexp_path>, [">= 0"])
-    s.add_dependency(%q<ruby_parser>, ["~> 3.1"])
-    s.add_dependency(%q<jeweler>, [">= 0"])
     s.add_dependency(%q<sexp_processor>, ["~> 3.0"])
+    s.add_dependency(%q<jeweler>, [">= 0"])
+    s.add_dependency(%q<rake>, [">= 0"])
+    s.add_dependency(%q<rdoc>, [">= 2.4.2"])
     s.add_dependency(%q<ruby_parser>, ["~> 2.0"])
   end
 end

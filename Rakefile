@@ -1,3 +1,11 @@
+require 'rubygems'
+
+begin
+  require 'bundler/setup'
+rescue LoadError
+  $stderr.puts "Please install bundler then run `bundle install` to install dependencies."
+end
+
 require 'rake'
 require 'rake/testtask'
 require 'rdoc/task'
@@ -16,11 +24,10 @@ begin
     s.authors = ["Adam Sanderson"]
     s.files = FileList["[A-Z]*", "{bin,lib,test,examples}/**/*"]
     
-    s.add_dependency 'sexp_processor', '~> 3.0'
-    
     # Testing
     s.test_files = FileList["test/**/*_test.rb"]
-    s.add_development_dependency 'ruby_parser', '~> 2.0'
+
+    # dependencies defined in Gemfile
   end
 
 rescue LoadError

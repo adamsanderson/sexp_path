@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'sexp_processor'
 
 module SexpPath
@@ -10,14 +9,13 @@ module SexpPath
   end
 end
 
-sexp_path_root = File.dirname(__FILE__)+'/sexp_path/'
 %w[
   traverse 
   sexp_query_builder
   ruby_query_builder
   sexp_result
   sexp_collection
-    
+  
   matcher/base
   matcher/any
   matcher/all
@@ -33,7 +31,7 @@ sexp_path_root = File.dirname(__FILE__)+'/sexp_path/'
   matcher/sibling
   
 ].each do |path|
-  require sexp_path_root+path
+  require_relative "./sexp_path/#{path}"
 end
 
 # Pattern building helper, see SexpQueryBuilder

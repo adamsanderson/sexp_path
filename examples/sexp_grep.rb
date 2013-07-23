@@ -1,10 +1,8 @@
-require 'rubygems'
-require File.dirname(__FILE__) + '/../lib/sexp_path'
+require_relative '../lib/sexp_path'
 require 'ruby_parser'
 
 # Example program, this will scan a file for anything
 # matching the Sexp passed in.
-
 
 pattern = ARGV.shift
 paths = ARGV

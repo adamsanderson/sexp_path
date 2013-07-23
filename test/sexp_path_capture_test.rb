@@ -1,5 +1,5 @@
 require 'test/unit'
-require 'sexp_path'
+require_relative '../lib/sexp_path'
 
 class SexpPathCaptureTest < Test::Unit::TestCase  
   def setup

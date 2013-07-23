@@ -1,5 +1,5 @@
 require 'test/unit'
-require 'sexp_path'
+require_relative '../lib/sexp_path'
 
 class SexpReplacementTest < Test::Unit::TestCase  
   def test_replacing_exact_matches

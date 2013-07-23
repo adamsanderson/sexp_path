@@ -3,6 +3,8 @@ Gem::Specification.new do |s|
   s.version          = "0.5.1"
   s.platform         = Gem::Platform::RUBY
   
+  s.required_ruby_version = '>= 1.9'
+  
   s.summary          = "Pattern matching for S-Expressions"
   s.description      = "Example based structural pattern matching for S-Expressions"
   

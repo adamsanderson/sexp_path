@@ -1,5 +1,6 @@
 require 'test/unit'
-require 'sexp_path'
+require_relative '../lib/sexp_path'
+
 require 'ruby_parser'
 require 'set'
 

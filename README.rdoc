@@ -131,7 +131,6 @@ in `method_name`.
 Here is an example of using SexpPath to grab all the classes and their methods from
 a file:
   
-    require 'rubygems'
     require 'sexp_path'
     require 'ruby_parser' # `gem install ruby_parser`
   

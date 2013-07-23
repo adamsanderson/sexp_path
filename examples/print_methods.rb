@@ -1,5 +1,4 @@
-require 'rubygems'
-require File.dirname(__FILE__) + '/../lib/sexp_path'
+require_relative '../lib/sexp_path'
 require 'ruby_parser'
 
 path = ARGV.shift

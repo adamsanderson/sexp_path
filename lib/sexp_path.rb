@@ -52,7 +52,7 @@ class Sexp
   # Extends Sexp to allow any Sexp to be used as a SexpPath matcher
   def satisfy?(o, data={})
     return false unless o.is_a? Sexp
-    return false unless (length == o.length || last.is_a?(SexpPath::Matcher::Remaining) )
+    return false unless length == o.length || (last.is_a?(Sexp) && last.greedy?)
     
     each_with_index do |child,i|
       if child.is_a?(Sexp)

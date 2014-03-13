@@ -9,7 +9,11 @@ class SexpPath::Matcher::Remaining < SexpPath::Matcher::Base
   
   # Always satisfied once this is reached.  Think of it as a var arg.
   def satisfy?(o, data={})
-    data
+    capture_match o, data
+  end
+  
+  def greedy?
+    true
   end
   
   def inspect

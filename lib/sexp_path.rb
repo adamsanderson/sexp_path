@@ -53,7 +53,15 @@ class Sexp
   def satisfy?(o, data={})
     return false unless o.is_a? Sexp
     return false unless (length == o.length || last.is_a?(SexpPath::Matcher::Remaining) )
-    each_with_index{|c,i| return false unless c.is_a?(Sexp) ? c.satisfy?( o[i], data ) : c == o[i] }
+    
+    each_with_index do |child,i|
+      if child.is_a?(Sexp)
+        candidate = child.greedy? ? o[i..-1] : o[i]
+        return false unless child.satisfy?( candidate, data )
+      else
+        return false unless child == o[i]
+      end
+    end
 
     capture_match(o, data)
   end

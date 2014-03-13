@@ -45,6 +45,10 @@ class SexpPath::Matcher::Base < Sexp
     SexpPath::Matcher::Sibling.new(self, o)
   end
   
+  def greedy?
+    false
+  end
+  
   # Formats the matcher as:
   #   q(:a, :b)
   def inspect

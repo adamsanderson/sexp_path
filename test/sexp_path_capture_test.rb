@@ -128,4 +128,16 @@ class SexpPathCaptureTest < Test::Unit::TestCase
     assert_equal s(:c), res['c']
   end
   
+  def test_capturing_remaining
+    sexp = s(s(:a), s(:b), s(:c))
+    assert res = Q?{ s(s(:a), ___ % 'match') }.satisfy?( sexp )
+    assert_equal [s(:b), s(:c)], res['match']
+  end
+  
+  def test_capturing_remaining_atoms
+    sexp = s(:a, :b, :c)
+    assert res = Q?{ s(:a, ___ % 'match') }.satisfy?( sexp )
+    assert_equal [:b, :c], res['match']
+  end
+  
 end

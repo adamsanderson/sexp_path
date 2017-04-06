@@ -62,7 +62,7 @@ module SexpPath
 
     private  
     def capture_match(matching_object, data)
-      if @capture_name
+      if defined?(@capture_name) && @capture_name
         data[@capture_name] = matching_object
       end
 

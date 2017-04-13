@@ -138,8 +138,8 @@ a file:
     code = File.read(path)
     sexp = RubyParser.new.parse(code, path)
 
-    class_query = Q?{ s(:class, atom % 'class_name', _, _) }
-    method_query = Q?{ s(:defn, atom % 'method_name', _ ) }
+    class_query = Q?{ s(:class, atom % 'class_name', _, ___) }
+    method_query = Q?{ s(:defn, atom % 'method_name', ___) }
 
     results = sexp / class_query / method_query
 
